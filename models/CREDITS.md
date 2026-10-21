@@ -1,0 +1,42 @@
+# Models
+
+All models are from Poly Haven (https://polyhaven.com), released under CC0.
+
+- Barrel_01 (Barrel_01) by Jorge Camacho: https://polyhaven.com/a/Barrel_01
+- Barrel 02 (Barrel_02) by Jorge Camacho: https://polyhaven.com/a/Barrel_02
+- Barrel 03 (barrel_03) by Serhii Khromov: https://polyhaven.com/a/barrel_03
+- Wooden Military Crate (wooden_military_crate) by Prabhjinder Singh: https://polyhaven.com/a/wooden_military_crate
+- Wooden Crate 02 (wooden_crate_02) by James Ray Cock, Jurita Burger: https://polyhaven.com/a/wooden_crate_02
+- Old Military Crate (old_military_crate) by Jack Mava: https://polyhaven.com/a/old_military_crate
+- Ammo Box (ammo_box) by DanKit: https://polyhaven.com/a/ammo_box
+- Metal Jerrycan Green (metal_jerrycan_green) by Ulan Cabanilla: https://polyhaven.com/a/metal_jerrycan_green
+- Plastic Jerrycan (plastic_jerrycan) by Ulan Cabanilla: https://polyhaven.com/a/plastic_jerrycan
+- Old Tyre (old_tyre) by MP: https://polyhaven.com/a/old_tyre
+- Concrete Road Barrier 02 (concrete_road_barrier_02) by Amal Kumar: https://polyhaven.com/a/concrete_road_barrier_02
+- Old Military Compressor (old_military_compressor) by Brian Speight: https://polyhaven.com/a/old_military_compressor
+- Portable Generator (portable_generator) by James Ray Cock: https://polyhaven.com/a/portable_generator
+- Metal Office Desk (metal_office_desk) by Ulan Cabanilla: https://polyhaven.com/a/metal_office_desk
+- Steel Frame Shelves 01 (steel_frame_shelves_01) by James Ray Cock: https://polyhaven.com/a/steel_frame_shelves_01
+- Industrial Wall Lamp (industrial_wall_lamp) by Kuutti Siitonen: https://polyhaven.com/a/industrial_wall_lamp
+- Security Light (security_light) by Maximilian Schuster: https://polyhaven.com/a/security_light
+- Utility Box 01 (utility_box_01) by James Ray Cock: https://polyhaven.com/a/utility_box_01
+- Utility Box 02 (utility_box_02) by James Ray Cock: https://polyhaven.com/a/utility_box_02
+- Portable Searchlight (portable_searchlight) by Elijah Cragg: https://polyhaven.com/a/portable_searchlight
+- Cement Bag (cement_bag) by PierreB3D: https://polyhaven.com/a/cement_bag
+- Trashbag (trashbag) by Benny Weimer: https://polyhaven.com/a/trashbag
+- Propane Tank (propane_tank) by Slinc: https://polyhaven.com/a/propane_tank
+- Tool Cart (tool_cart) by Savva Zakharov: https://polyhaven.com/a/tool_cart
+- Metal Toolbox (metal_toolbox) by Mateusz Sadek: https://polyhaven.com/a/metal_toolbox
+- Plastic Monobloc Chair 01 (plastic_monobloc_chair_01) by Kuutti Siitonen: https://polyhaven.com/a/plastic_monobloc_chair_01
+- Classic Laptop (classic_laptop) by Arrangemonk: https://polyhaven.com/a/classic_laptop
+- Vintage Radio Transceiver (vintage_radio_transceiver) by Mateusz Sadek: https://polyhaven.com/a/vintage_radio_transceiver
+- Hanging Industrial Lamp (hanging_industrial_lamp) by Kuutti Siitonen: https://polyhaven.com/a/hanging_industrial_lamp
+- Namaqualand Boulder 02 (namaqualand_boulder_02) by Greg Zaal, Rico Cilliers: https://polyhaven.com/a/namaqualand_boulder_02
+- Namaqualand Boulder 03 (namaqualand_boulder_03) by Jenelle van Heerden, Dario Barresi: https://polyhaven.com/a/namaqualand_boulder_03
+- Namaqualand Boulder 05 (namaqualand_boulder_05) by Jenelle van Heerden, Dario Barresi: https://polyhaven.com/a/namaqualand_boulder_05
+- Quiver Tree 02 (quiver_tree_02) by Dario Barresi, Rico Cilliers: https://polyhaven.com/a/quiver_tree_02
+- Dead Quiver Trunk (dead_quiver_trunk) by James Ray Cock, Dario Barresi, Rico Cilliers: https://polyhaven.com/a/dead_quiver_trunk
+- Shrub 04 (shrub_04) by Rico Cilliers: https://polyhaven.com/a/shrub_04
+- Dry Branches Medium 01 (dry_branches_medium_01) by Rico Cilliers: https://polyhaven.com/a/dry_branches_medium_01
+- Service Pistol (service_pistol) by Mateusz Sadek: https://polyhaven.com/a/service_pistol
+- Bolt Action Rifle 7.62 (bolt_action_rifle_7_62) by Mateusz Sadek: https://polyhaven.com/a/bolt_action_rifle_7_62

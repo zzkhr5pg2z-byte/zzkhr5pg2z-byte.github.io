@@ -1,0 +1,18 @@
+{
+ "id": "quarry_02",
+ "sun": [
+  0.5497,
+  0.7335,
+  0.3997
+ ],
+ "sunElevation": 47.182,
+ "horizon": [
+  0.3181,
+  0.341,
+  0.3158
+ ],
+ "scale": 1.1672,
+ "bg": "quarry_02_bg.jpg",
+ "env": "quarry_02_env.png",
+ "envMax": 8
+}
