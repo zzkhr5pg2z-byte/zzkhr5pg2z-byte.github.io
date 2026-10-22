@@ -2,6 +2,12 @@
 
 Used under the licences shown; CC BY models are credited in the game menu.
 
+- "AR-15 style rifle" by SpatialNeglect (CC BY 4.0): https://sketchfab.com/3d-models/ar-15-style-rifle-50d33435445e439c95e3b36e9d4bd798
+- "MP5 Submachine Gun" by Rotuma (CC BY 4.0): https://sketchfab.com/3d-models/mp5-submachine-gun-a73b61932a0e4eecb5db5c63c158aa24
+- "Remington 870 Police Magnum 12 Gauge Shotgun" by 8sianDude (CC BY 4.0): https://sketchfab.com/3d-models/remington-870-police-magnum-12-gauge-shotgun-eea11de7e9d24b6683962b8388c319eb
+- "LMG" by DJMaesen (CC BY 4.0): https://sketchfab.com/3d-models/lmg-8c24d7374ea64bdab1c30f49c69d5ed8
+- "Modern Sniper Rifle | Free Lowpoly" by Vlasov Daniil (CC BY 4.0): https://sketchfab.com/3d-models/modern-sniper-rifle-free-lowpoly-45c99509f1ee4c2a8c9c3336d3e2ff5a
+- "FP arms" by DJMaesen (CC BY 4.0): https://sketchfab.com/3d-models/fp-arms-06ee1407117d4e5ab343becb4ee44bb6
 - "HMMWV M998A1 (soft top)" by 42manako (CC BY 4.0): https://sketchfab.com/3d-models/hmmwv-m998a1-soft-top-ffbc4b053628413fb84acf5b89595d96
 - "Ural 4320" by Brout (CC BY 4.0): https://sketchfab.com/3d-models/ural-4320-f953c51a5dbc4a15949f4dcc0905c4e8
 - "Sikorsky UH-60M Blackhawk" by Muhamad Mirza Arrafi (CC BY 4.0): https://sketchfab.com/3d-models/sikorsky-uh-60m-blackhawk-12b4e525676a49678ac3006b360c8750

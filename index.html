@@ -76,7 +76,7 @@ body { margin: 0; background: var(--night); color: var(--fg); font-family: var(-
 #lockHint { position: absolute; left: 50%; transform: translateX(-50%); bottom: calc(80px + env(safe-area-inset-bottom, 0px)); }
 
 #cross { position: absolute; left: 50%; top: 50%; width: 0; height: 0; --gap: 6px; }
-#cross i { position: absolute; background: var(--fg); box-shadow: 0 0 2px rgba(0,0,0,.9); }
+#cross i { position: absolute; background: var(--cross, var(--fg)); box-shadow: 0 0 2px rgba(0,0,0,.9); }
 #cross i:nth-child(1) { width: 2px; height: 9px; left: -1px; bottom: var(--gap); }
 #cross i:nth-child(2) { width: 2px; height: 9px; left: -1px; top: var(--gap); }
 #cross i:nth-child(3) { height: 2px; width: 9px; top: -1px; right: var(--gap); }
@@ -203,6 +203,8 @@ kbd { font-family: var(--mono); font-size: 11px; color: var(--fg); background: v
 .btn:hover:not(:disabled) { background: #ffbb48; }
 .btn:focus-visible, .tbtn:focus-visible, input:focus-visible { outline: 2px solid var(--fg); outline-offset: 3px; }
 .sens { display: flex; gap: 10px; align-items: center; font-family: var(--mono); font-size: 12px; color: var(--muted); }
+.opts { display: flex; flex-wrap: wrap; gap: 10px 22px; margin-top: 14px; }
+.opts .sens input[type=range] { width: 110px; }
 .sens input { accent-color: var(--amber); width: 140px; }
 .sens select { font: inherit; color: var(--fg); background: var(--night); border: 1px solid var(--line); padding: 4px 6px; border-radius: 3px; }
 .foes b { color: var(--fg); font-weight: 600; }
@@ -221,7 +223,18 @@ kbd { font-family: var(--mono); font-size: 11px; color: var(--fg); background: v
 .field.code { width: 90px; text-transform: uppercase; letter-spacing: .2em; }
 #gameList { display: grid; gap: 6px; }
 .game-row { display: flex; gap: 12px; align-items: center; justify-content: space-between; padding: 8px 10px; background: rgba(0,0,0,.25); border: 1px solid var(--line); font-family: var(--mono); font-size: 13px; }
-#versus { position: absolute; left: 50%; top: calc(14px + env(safe-area-inset-top, 0px)); transform: translateX(-50%); display: grid; justify-items: center; gap: 2px; text-align: center; pointer-events: none; }
+/* hardcore: the HUD goes, bar the compass, the feed and the hit and damage markers */
+body.hardcore #hud .corner, body.hardcore #cross, body.hardcore #items { visibility: hidden; }
+/* the training range has no waves, score or streaks */
+body.range #hud .corner.tl { visibility: hidden; }
+#compass { position: absolute; left: 50%; top: calc(8px + env(safe-area-inset-top, 0px)); width: min(320px, 60vw); height: 26px; transform: translateX(-50%); overflow: hidden; pointer-events: none;
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 22%, #000 78%, transparent); mask-image: linear-gradient(90deg, transparent, #000 22%, #000 78%, transparent); }
+#compassStrip { position: absolute; left: 0; top: 0; height: 18px; white-space: nowrap; will-change: transform; }
+#compassStrip span { position: absolute; top: 0; transform: translateX(-50%); font-family: var(--mono); font-size: 11px; color: var(--fg); text-shadow: 0 1px 2px #000; }
+#compassStrip span.c { color: var(--amber); font-weight: 700; }
+#compassStrip i { position: absolute; top: 4px; width: 1px; height: 6px; background: rgba(255,255,255,.55); }
+#compass b { position: absolute; left: 50%; bottom: 0; transform: translateX(-50%); font-family: var(--mono); font-size: 10px; font-weight: 400; color: var(--amber); text-shadow: 0 1px 2px #000; }
+#versus { position: absolute; left: 50%; top: calc(38px + env(safe-area-inset-top, 0px)); transform: translateX(-50%); display: grid; justify-items: center; gap: 2px; text-align: center; pointer-events: none; }
 #versus .vs { font-family: var(--display); font-size: 30px; line-height: 1; white-space: nowrap; text-shadow: 0 2px 0 rgba(0,0,0,.6); }
 #versus .vs b { font-weight: 400; color: var(--amber); }
 #versus .sub { font-family: var(--mono); font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); text-shadow: 0 1px 2px #000; }
@@ -278,6 +291,7 @@ body.touch .desk-only, body:not(.touch) .touch-only { display: none !important; 
     <div id="streakBox"><div class="label" style="margin-top:8px">Streak</div><div class="row"><span class="big" id="streakNum">0</span><span id="streakNext"></span></div><div id="streakPips"></div></div></div>
   <div class="corner tr"><canvas id="minimap" width="170" height="170" aria-label="Minimap"></canvas></div>
   <div id="feed" aria-live="polite"></div>
+  <div id="compass" aria-hidden="true"><div id="compassStrip"></div><b id="compassDeg">0</b></div>
   <div id="versus" hidden><div class="vs" id="vsScore"></div><div class="sub" id="vsSub"></div></div>
   <div class="corner bl"><div id="stimLbl"></div><div class="row" style="gap:8px;align-items:baseline"><div class="label">Health</div><div id="arNum"></div></div><div class="bar armor"><div id="arFill"></div></div><div class="bar"><div id="hpFill"></div></div><div class="row"><div id="hpNum">100</div><div id="floor">Ground</div></div></div>
   <div id="items"></div>
@@ -350,16 +364,25 @@ body.touch .desk-only, body:not(.touch) .touch-only { display: none !important; 
       <div class="gun"><b>4 · Breacher</b><span>Shotgun. Barracks 1, upstairs (west side of the base).</span></div>
       <div class="gun"><b>5 · Longshot</b><span>Scoped sniper. On the HQ roof.</span></div>
     </div>
-    <p class="lede foes"><b>Crawlers</b> rush and bite. <b>Sentinels</b> carry rifles, take cover and peek out to shoot. <b>Gunners</b> walk at you with miniguns. <b>Marksmen</b> snipe from rooftops; you'll see their red laser before they fire. Drones and Brutes join later.</p>
+    <p class="lede foes"><b>Crawlers</b> rush and bite. <b>Sentinels</b> carry rifles, take cover and peek out to shoot; some carry a frag for when you go to ground. A chirp means one has just spotted you. <b>Gunners</b> walk at you with miniguns. <b>Marksmen</b> snipe from rooftops; you'll see their red laser before they fire. Drones and Brutes join later.</p>
     <p class="lede foes"><b>Frags</b> bounce and blow apart groups; hold the key to cook one so it goes off sooner. <b>Smoke</b> hides you, so use it to cross open ground. <b>Flashbangs</b> blind every robot that sees the bang (and you, if you're looking). <b>EMP</b> freezes robots and drops drones. <b>Armour plates</b> soak up damage, <b>medkits</b> heal 60 and a <b>stim</b> makes you faster and tougher for 12 seconds.</p>
     <p class="lede foes"><b>Kill streaks</b> count robots you take down without dropping under 35 health. <b>3</b> puts every robot on your map for 15 s (otherwise it only shows the ones you can see or hear firing). <b>5</b> drops a supply crate on a parachute. <b>8</b> earns an airstrike: aim at open ground and press <kbd>B</kbd>, then get clear. Supply drops also come in during the fight: follow the red smoke and hold <kbd>E</kbd> to open them.</p>
-    <p class="lede foes"><b>Fuel</b> burns: shoot the tanker by the fuel point or the bulk tanks inside it and they'll spray fire for a couple of seconds, then explode. Stand well back.</p>
+    <p class="lede foes"><b>Fuel</b> burns: shoot the tanker by the fuel point, the bulk tanks inside it or the red drums beside some of the cover and they'll spray fire for a moment, then explode. Stand well back.</p>
+    <p class="lede foes"><b>Training range</b>: targets at 10 to 60 m down the main road, one walking across, with every gun and unlimited ammo. Press Esc to see your hits and leave.</p>
     <p class="tip">Head and visor shots do double damage. Green crates refill ammo and top up frags and armour. Robots drop supplies.</p>
-    <div class="actions"><button class="btn" id="startBtn" type="button" disabled>Deploy</button>
-      <label class="sens" for="quality">Graphics <select id="quality"><option value="high">High</option><option value="medium">Medium</option><option value="low">Low</option><option value="vlow">Very low</option></select></label>
-      <label class="sens" for="storms">Dust storms <input id="storms" type="checkbox" checked style="width:auto"></label>
-      <label class="sens desk-only" for="sens">Mouse speed <input id="sens" type="range" min="0.3" max="2.5" step="0.1" value="1"><span id="sensVal">1.0×</span></label>
+    <div class="actions"><button class="btn" id="startBtn" type="button" disabled>Deploy</button><button class="btn2" id="rangeBtn" type="button" disabled>Training range</button>
       <span class="note" id="bestMenu"></span></div>
+    <div id="menuOpts"><div class="opts" id="opts">
+      <label class="sens" for="quality">Graphics <select id="quality"><option value="ultra">Extra high</option><option value="high">High</option><option value="medium">Medium</option><option value="low">Low</option><option value="vlow">Very low</option></select></label>
+      <label class="sens" for="weather">Weather <select id="weather"><option value="dynamic">Changing</option><option value="clear">Clear</option><option value="haze">Hazy</option><option value="storm">Dust storm</option></select></label>
+      <label class="sens desk-only" for="sens">Mouse speed <input id="sens" type="range" min="0.3" max="2.5" step="0.1" value="1"><span id="sensVal">1.0×</span></label>
+      <label class="sens" for="fov">Field of view <input id="fov" type="range" min="60" max="100" step="1" value="75"><span id="fovVal">75°</span></label>
+      <label class="sens" for="vol">Volume <input id="vol" type="range" min="0" max="1" step="0.05" value="1"><span id="volVal">100%</span></label>
+      <label class="sens" for="crossCol">Crosshair <select id="crossCol"><option value="">White</option><option value="#3dff6e">Green</option><option value="#ffe14a">Yellow</option><option value="#3de8ff">Cyan</option><option value="#ff5ad9">Pink</option></select></label>
+      <label class="sens desk-only" for="invertY">Invert look <input id="invertY" type="checkbox" style="width:auto"></label>
+      <label class="sens" for="calm">Less camera shake <input id="calm" type="checkbox" style="width:auto"></label>
+      <label class="sens" for="hardcore" title="On your own: no HUD or crosshair, no health coming back, robots hit harder">Hardcore <input id="hardcore" type="checkbox" style="width:auto"></label>
+    </div></div>
     <div class="online" id="onlinePanel">
       <h2>Play with a <em>friend</em></h2>
       <p class="lede" style="font-size:14px"><b>PvP</b> loads you both into the hub in the hangar. At the match terminal (<kbd>E</kbd>, or <kbd>Tab</kbd> anywhere) the host picks <b>Gun Game</b> (a new gun after every kill, first to the kill target wins), <b>Duel rounds</b>, <b>Scavenger</b> (everyone starts with a pistol; grab the guns lying round the base) or <b>King of the Hill</b> (hold the glowing zone on your own to score; it moves every 45 s), and switches on no recoil, no camping, unlimited ammo or one-shot kills. Spawns are random and out of sight. <b>Co-op</b>: the two of you against the robot waves; hold <kbd>E</kbd> by a downed friend to revive them.</p>
@@ -370,7 +393,13 @@ body.touch .desk-only, body:not(.touch) .touch-only { display: none !important; 
       <p class="note" id="netNote">Connecting…</p>
     </div>
     <p class="small credits">Sky, textures and scanned props from <a href="https://polyhaven.com" target="_blank" rel="noopener">Poly Haven</a> (CC0).
-      Vehicles, containers and buildings from Sketchfab (CC BY 4.0):
+      Guns (extra high graphics), vehicles, containers and buildings from Sketchfab (CC BY 4.0):
+      <a href="https://sketchfab.com/3d-models/ar-15-style-rifle-50d33435445e439c95e3b36e9d4bd798" target="_blank" rel="noopener">AR-15 style rifle</a> by SpatialNeglect,
+      <a href="https://sketchfab.com/3d-models/mp5-submachine-gun-a73b61932a0e4eecb5db5c63c158aa24" target="_blank" rel="noopener">MP5 Submachine Gun</a> by Rotuma,
+      <a href="https://sketchfab.com/3d-models/remington-870-police-magnum-12-gauge-shotgun-eea11de7e9d24b6683962b8388c319eb" target="_blank" rel="noopener">Remington 870 Police Magnum</a> by 8sianDude,
+      <a href="https://sketchfab.com/3d-models/lmg-8c24d7374ea64bdab1c30f49c69d5ed8" target="_blank" rel="noopener">LMG</a> by DJMaesen,
+      <a href="https://sketchfab.com/3d-models/modern-sniper-rifle-free-lowpoly-45c99509f1ee4c2a8c9c3336d3e2ff5a" target="_blank" rel="noopener">Modern Sniper Rifle</a> by Vlasov Daniil,
+      <a href="https://sketchfab.com/3d-models/fp-arms-06ee1407117d4e5ab343becb4ee44bb6" target="_blank" rel="noopener">FP arms</a> by DJMaesen (sleeves recoloured);
       <a href="https://sketchfab.com/3d-models/hmmwv-m998a1-soft-top-ffbc4b053628413fb84acf5b89595d96" target="_blank" rel="noopener">HMMWV M998A1</a> by 42manako,
       <a href="https://sketchfab.com/3d-models/ural-4320-f953c51a5dbc4a15949f4dcc0905c4e8" target="_blank" rel="noopener">Ural 4320</a> by Brout,
       <a href="https://sketchfab.com/3d-models/sikorsky-uh-60m-blackhawk-12b4e525676a49678ac3006b360c8750" target="_blank" rel="noopener">UH-60M Blackhawk</a> by Muhamad Mirza Arrafi,
@@ -408,6 +437,7 @@ body.touch .desk-only, body:not(.touch) .touch-only { display: none !important; 
     <h2>Paused</h2>
     <p class="lede">The robots will wait.</p>
     <div class="actions"><button class="btn" id="resumeBtn" type="button">Resume</button><button class="btn2" id="leaveBtn" type="button" hidden>Leave match</button><span class="note">M toggles sound</span></div>
+    <div id="pauseOpts"></div>
     <p class="note" id="pauseNote" hidden>The match keeps going while you're paused.</p>
   </div></div>
 </section>
@@ -426,7 +456,7 @@ body.touch .desk-only, body:not(.touch) .touch-only { display: none !important; 
   </div></div>
 </section>
 
-<script src="game.js?v=bf4ad9c1fa"></script>
+<script src="game.js?v=6319e04a1e"></script>
 
 </body>
 </html>
