@@ -221,6 +221,13 @@ kbd { font-family: var(--mono); font-size: 11px; color: var(--fg); background: v
 .stats div { display: grid; gap: 4px; }
 .stats .big { font-size: 34px; }
 .note { margin: 0; font-family: var(--mono); font-size: 12px; color: var(--muted); }
+.history { margin-top: 12px; }
+.history summary { cursor: pointer; width: max-content; }
+.history table { width: 100%; border-collapse: collapse; font-family: var(--mono); font-size: 12px; margin-top: 8px; }
+.history th { text-align: left; font-weight: 600; color: var(--muted); border-bottom: 1px solid var(--line); padding: 4px 8px 4px 0; }
+.history td { padding: 4px 8px 4px 0; border-bottom: 1px solid color-mix(in srgb, var(--line) 50%, transparent); font-variant-numeric: tabular-nums; }
+.history tr.now td { color: var(--amber); }
+#historyOver table tr:nth-child(n + 7) { display: none; }
 /* online */
 .online { display: grid; gap: 12px; padding-top: 16px; border-top: 1px solid var(--line); }
 .online h2 { font-size: 26px; }
@@ -376,13 +383,19 @@ body.touch .desk-only, body:not(.touch) .touch-only { display: none !important; 
     <p class="lede foes"><b>Crawlers</b> rush and bite. <b>Sentinels</b> carry rifles, take cover and peek out to shoot; some carry a frag for when you go to ground. A chirp means one has just spotted you, and it tells the others near it. They look where they're facing, so you can slip past one looking the other way, but they hear gunfire (the suppressed SMG barely carries) and come to look. <b>Gunners</b> walk at you with miniguns. <b>Marksmen</b> snipe from rooftops, sweeping their sights across the base; you'll see their red laser before they fire. Drones and Brutes join later.</p>
     <p class="lede foes"><b>Frags</b> bounce and blow apart groups; hold the key to cook one so it goes off sooner. <b>Smoke</b> hides you, so use it to cross open ground. <b>Flashbangs</b> blind every robot that sees the bang (and you, if you're looking). <b>EMP</b> freezes robots and drops drones. <b>Armour plates</b> soak up damage, <b>medkits</b> heal 60 and a <b>stim</b> makes you faster and tougher for 12 seconds.</p>
     <p class="lede foes"><b>Kill streaks</b> count robots you take down without dropping under 35 health. <b>3</b> puts every robot on your map for 15 s (otherwise it only shows the ones you can see or hear firing). <b>5</b> drops a supply crate on a parachute. <b>8</b> earns an airstrike: aim at open ground and press <kbd data-k="KeyB">B</kbd>, then get clear. Supply drops also come in during the fight: follow the red smoke and hold <kbd data-k="KeyE">E</kbd> to open them.</p>
+    <p class="lede foes"><b>Cover</b> isn't all equal: rifle, LMG, DMR and sniper rounds go through plasterboard walls, wood and the hangar's sheet metal (weaker for it, and the robots' rounds do the same); pistol, SMG and shotgun rounds don't. Concrete, sandbags, HESCO and containers stop everything.</p>
     <p class="lede foes"><b>Fuel</b> burns: shoot the tanker by the fuel point, the bulk tanks inside it or the red drums beside some of the cover and they'll spray fire for a moment, then explode. Stand well back.</p>
     <p class="lede foes"><b>Training range</b>: targets at 10 to 60 m down the main road, one walking across, with every gun and unlimited ammo. Press Esc to see your hits and leave.</p>
     <p class="tip">Head and visor shots do double damage. Green crates refill ammo and top up frags and armour. Robots drop supplies.</p>
     <div class="actions"><button class="btn" id="startBtn" type="button" disabled>Deploy</button><button class="btn2" id="rangeBtn" type="button" disabled>Training range</button>
       <span class="note" id="bestMenu"></span></div>
+    <details class="history"><summary class="sens">Last games</summary><div id="historyMenu"></div></details>
     <div id="menuOpts"><div class="opts" id="opts">
       <label class="sens" for="quality">Graphics <select id="quality"><option value="ultra">Extra high</option><option value="high">High</option><option value="medium">Medium</option><option value="low">Low</option><option value="vlow">Very low</option></select></label>
+      <label class="sens" for="resSet" title="Auto lowers the resolution when the frame rate drops and raises it again when there's room">Resolution <select id="resSet"><option value="auto">Auto</option><option value="1">100%</option><option value="0.85">85%</option><option value="0.7">70%</option><option value="0.5">50%</option></select></label>
+      <label class="sens" for="shadowSet">Shadows <select id="shadowSet"><option value="auto">By graphics</option><option value="high">High</option><option value="low">Low</option><option value="off">Off</option></select></label>
+      <label class="sens" for="fxSet" title="Ambient occlusion, bloom and anti-aliasing">Effects <select id="fxSet"><option value="auto">By graphics</option><option value="off">Off</option></select></label>
+      <label class="sens" for="fpsCap" title="Capping the frame rate keeps a laptop cooler and quieter">Frame rate <select id="fpsCap"><option value="0">Unlimited</option><option value="120">120</option><option value="60">60</option><option value="30">30</option></select></label>
       <label class="sens" for="weather">Weather <select id="weather"><option value="dynamic">Changing</option><option value="clear">Clear</option><option value="haze">Hazy</option><option value="storm">Dust storm</option></select></label>
       <label class="sens desk-only" for="sens">Mouse speed <input id="sens" type="range" min="0.3" max="2.5" step="0.1" value="1"><span id="sensVal">1.0×</span></label>
       <label class="sens" for="fov">Field of view <input id="fov" type="range" min="60" max="100" step="1" value="75"><span id="fovVal">75°</span></label>
@@ -469,11 +482,12 @@ body.touch .desk-only, body:not(.touch) .touch-only { display: none !important; 
       <div><span class="label" id="oL4">Accuracy</span><span class="big" id="oAcc">0%</span></div>
     </div>
     <p class="note" id="oBest"></p>
+    <div class="history" id="historyOver"></div>
     <div class="actions"><button class="btn" id="againBtn" type="button">Redeploy</button><button class="btn2" id="leaveBtn2" type="button" hidden>Leave match</button></div>
   </div></div>
 </section>
 
-<script src="game.js?v=68ae6ae295"></script>
+<script src="game.js?v=652936bee8"></script>
 
 </body>
 </html>
