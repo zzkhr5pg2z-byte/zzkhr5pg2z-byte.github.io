@@ -20,3 +20,9 @@ Used under the licences shown; CC BY models are credited in the game menu.
 - "Middle Eastern Hut Kitset part 1" by MrMffn (CC BY 4.0): https://sketchfab.com/3d-models/middle-eastern-hut-kitset-part-1-3773ee7a9be44fafa6afee7432bf96c3
 - "Guard booth (retextured)" by Кіт Васько (CC BY 4.0): https://sketchfab.com/3d-models/guard-booth-retextured-33594cafeabc482f9afa900b4607b564
 - "basement" by user16.1914 (CC BY 4.0): https://sketchfab.com/3d-models/basement-6a93c0b301014f22bd1eec9a3521e5c2
+- Grip poses for the arms (finger and thumb directions only, no meshes) from animated sets by DJMaesen (CC BY 4.0):
+  "fps AK animated" https://sketchfab.com/3d-models/fps-ak-animated-b0b1bae40337449189483f6187cf7af7,
+  "fps animated smg" https://sketchfab.com/3d-models/fps-animated-smg-ea3dad7478624495a5a46f40127b0579,
+  "shotgun animated" https://sketchfab.com/3d-models/shotgun-animated-eb711e053b47404b9feb5370c0afba85,
+  "heavy pistol animated" https://sketchfab.com/3d-models/heavy-pistol-animated-b7c78c533ced40cd986c44594b778ed6,
+  "sniper animated" https://sketchfab.com/3d-models/sniper-animated-b48999a250b2433da59f705c371a49b2
