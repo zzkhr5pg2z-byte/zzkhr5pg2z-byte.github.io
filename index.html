@@ -146,6 +146,14 @@ body.touch #items { bottom: auto; top: calc(78px + env(safe-area-inset-top, 0px)
 .scope-info { position: absolute; left: 50%; bottom: calc(50% - var(--r) - 34px); transform: translateX(-50%); display: flex; gap: 14px; font-family: var(--mono); font-size: 12px; color: var(--muted); letter-spacing: .1em; text-transform: uppercase; }
 #scope.steady .breath { color: var(--hull); }
 
+#board { position: fixed; left: 50%; top: 18%; transform: translateX(-50%); z-index: 4; width: min(640px, calc(100vw - 32px)); padding: 16px 18px; background: color-mix(in srgb, var(--night) 88%, transparent); border: 1px solid var(--line); border-radius: 4px; pointer-events: none; }
+#board .bh { display: flex; gap: 18px; align-items: baseline; font-family: var(--mono); font-size: 13px; color: var(--muted); letter-spacing: .08em; text-transform: uppercase; margin-bottom: 10px; }
+#board .bh b { font-family: var(--display); font-weight: 400; font-size: 30px; color: var(--amber); letter-spacing: 0; margin-left: 6px; }
+#board table { width: 100%; border-collapse: collapse; font-family: var(--mono); font-size: 13px; font-variant-numeric: tabular-nums; }
+#board th { text-align: left; font-weight: 600; font-size: 11px; color: var(--muted); letter-spacing: .08em; text-transform: uppercase; border-bottom: 1px solid var(--line); padding: 6px 10px 6px 0; }
+#board td { padding: 8px 10px 8px 0; border-bottom: 1px solid color-mix(in srgb, var(--line) 50%, transparent); color: var(--fg); }
+#board tbody tr:first-child td:first-child { color: var(--amber); }
+#board .note { margin-top: 10px; }
 #banner { position: fixed; left: 0; right: 0; top: 22%; z-index: 3; pointer-events: none; text-align: center; opacity: 0; display: grid; gap: 6px; padding-inline: 16px; }
 #banner b { font-family: var(--display); font-weight: 400; font-size: clamp(40px, 9vw, 74px); line-height: 1; color: var(--amber); text-shadow: 0 3px 0 rgba(0,0,0,.6); }
 #banner span { font-family: var(--mono); font-size: 13px; letter-spacing: .14em; text-transform: uppercase; color: var(--fg); text-shadow: 0 1px 3px #000; }
@@ -320,6 +328,11 @@ body.touch .desk-only, body:not(.touch) .touch-only { display: none !important; 
   <div id="prompt" hidden></div>
   <div id="cook" hidden><b id="cookNum">2.4</b><span>cooking</span></div>
 </div>
+<div id="board" hidden>
+  <div class="bh"><span>Wave <b id="bWave">1</b></span><span id="bTime">0:00</span><span id="bLeft"></span></div>
+  <table><thead><tr><th>Soldier</th><th>Robots</th><th>Eye shots</th><th>Score</th><th>Accuracy</th><th>Best streak</th></tr></thead><tbody id="bRows"></tbody></table>
+  <div class="note" id="bFoot"></div>
+</div>
 <div id="flashFx"></div>
 <div id="scope" hidden><div class="scope-info"><span id="zoomLbl">6×</span><span class="breath desk-only">Hold Shift to steady</span><span class="desk-only">Scroll to zoom</span></div></div>
 <div id="stimFx"></div>
@@ -365,7 +378,7 @@ body.touch .desk-only, body:not(.touch) .touch-only { display: none !important; 
       <div><dt><kbd data-k="KeyG">G</kbd><kbd data-k="KeyT">T</kbd><kbd data-k="KeyV">V</kbd><kbd data-k="KeyZ">Z</kbd></dt><dd>Hold to aim frag, smoke, flash, EMP. A held frag cooks</dd></div>
       <div><dt><kbd data-k="KeyH">H</kbd><kbd data-k="KeyF">F</kbd><kbd data-k="KeyX">X</kbd></dt><dd>Medkit, armour plate, stim</dd></div>
       <div><dt><kbd data-k="KeyE">E</kbd><kbd data-k="KeyB">B</kbd></dt><dd>Hold to open a supply crate. Call an airstrike</dd></div>
-      <div><dt><kbd>Tab</kbd></dt><dd>In the PvP hub: match settings</dd></div>
+      <div><dt><kbd>Tab</kbd></dt><dd>Hold for the scoreboard. In the PvP hub: match settings</dd></div>
     </dl>
     <dl class="controls touch-only">
       <div><dt><kbd>Left thumb</kbd></dt><dd>Move (push to the top to sprint)</dd></div>
@@ -384,6 +397,7 @@ body.touch .desk-only, body:not(.touch) .touch-only { display: none !important; 
     <p class="lede foes"><b>Frags</b> bounce and blow apart groups; hold the key to cook one so it goes off sooner. <b>Smoke</b> hides you, so use it to cross open ground. <b>Flashbangs</b> blind every robot that sees the bang (and you, if you're looking). <b>EMP</b> freezes robots and drops drones. <b>Armour plates</b> soak up damage, <b>medkits</b> heal 60 and a <b>stim</b> makes you faster and tougher for 12 seconds.</p>
     <p class="lede foes"><b>Kill streaks</b> count robots you take down without dropping under 35 health. <b>3</b> puts every robot on your map for 15 s (otherwise it only shows the ones you can see or hear firing). <b>5</b> drops a supply crate on a parachute. <b>8</b> earns an airstrike: aim at open ground and press <kbd data-k="KeyB">B</kbd>, then get clear. Supply drops also come in during the fight: follow the red smoke and hold <kbd data-k="KeyE">E</kbd> to open them.</p>
     <p class="lede foes"><b>Cover</b> isn't all equal: rifle, LMG, DMR and sniper rounds go through plasterboard walls, wood and the hangar's sheet metal (weaker for it, and the robots' rounds do the same); pistol, SMG and shotgun rounds don't. Concrete, sandbags, HESCO and containers stop everything.</p>
+    <p class="lede foes"><b>Mortars</b>: from wave 4 the robots sometimes call a barrage down on where you are. Each round is marked by a red flare a couple of seconds before it lands; move.</p>
     <p class="lede foes"><b>Fuel</b> burns: shoot the tanker by the fuel point, the bulk tanks inside it or the red drums beside some of the cover and they'll spray fire for a moment, then explode. Stand well back.</p>
     <p class="lede foes"><b>Training range</b>: targets at 10 to 60 m down the main road, one walking across, with every gun and unlimited ammo. Press Esc to see your hits and leave.</p>
     <p class="tip">Head and visor shots do double damage. Green crates refill ammo and top up frags and armour. Robots drop supplies.</p>
@@ -441,6 +455,7 @@ body.touch .desk-only, body:not(.touch) .touch-only { display: none !important; 
       <a href="https://sketchfab.com/3d-models/shanty-house-building-enterable-64f09376d1a44ffd8716d7cc5f28db9c" target="_blank" rel="noopener">Shanty</a> by YadroGames;
       <a href="https://sketchfab.com/3d-models/middle-eastern-hut-kitset-part-1-3773ee7a9be44fafa6afee7432bf96c3" target="_blank" rel="noopener">Middle Eastern Hut Kitset part 1</a> by MrMffn;
       <a href="https://sketchfab.com/3d-models/guard-booth-retextured-33594cafeabc482f9afa900b4607b564" target="_blank" rel="noopener">Guard booth (retextured)</a> by Кіт Васько;
+      <a href="https://sketchfab.com/3d-models/military-tent-016f79c835e7427a83c434a9d5e8165e" target="_blank" rel="noopener">Military Tent</a> by dark-minaz;
       <a href="https://sketchfab.com/3d-models/basement-6a93c0b301014f22bd1eec9a3521e5c2" target="_blank" rel="noopener">basement</a> by user16.1914.</p>
   </div></div>
 </section>
@@ -487,7 +502,7 @@ body.touch .desk-only, body:not(.touch) .touch-only { display: none !important; 
   </div></div>
 </section>
 
-<script src="game.js?v=652936bee8"></script>
+<script src="game.js?v=51061ac08d"></script>
 
 </body>
 </html>

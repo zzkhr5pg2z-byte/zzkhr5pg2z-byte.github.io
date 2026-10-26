@@ -19,6 +19,7 @@ Used under the licences shown; CC BY models are credited in the game menu.
 - "Shanty | House | Building | Enterable" by YadroGames (CC BY 4.0): https://sketchfab.com/3d-models/shanty-house-building-enterable-64f09376d1a44ffd8716d7cc5f28db9c
 - "Middle Eastern Hut Kitset part 1" by MrMffn (CC BY 4.0): https://sketchfab.com/3d-models/middle-eastern-hut-kitset-part-1-3773ee7a9be44fafa6afee7432bf96c3
 - "Guard booth (retextured)" by Кіт Васько (CC BY 4.0): https://sketchfab.com/3d-models/guard-booth-retextured-33594cafeabc482f9afa900b4607b564
+- "Military Tent" by dark-minaz (CC BY 4.0): https://sketchfab.com/3d-models/military-tent-016f79c835e7427a83c434a9d5e8165e
 - "basement" by user16.1914 (CC BY 4.0): https://sketchfab.com/3d-models/basement-6a93c0b301014f22bd1eec9a3521e5c2
 - Grip poses for the arms (finger and thumb directions only, no meshes) from animated sets by DJMaesen (CC BY 4.0):
   "fps AK animated" https://sketchfab.com/3d-models/fps-ak-animated-b0b1bae40337449189483f6187cf7af7,
