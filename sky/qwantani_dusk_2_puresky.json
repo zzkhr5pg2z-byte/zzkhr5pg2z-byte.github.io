@@ -1,0 +1,18 @@
+{
+ "id": "qwantani_dusk_2_puresky",
+ "sun": [
+  0.7651,
+  0.2723,
+  0.5836
+ ],
+ "sunElevation": 15.8022,
+ "horizon": [
+  0.0857,
+  0.0741,
+  0.1029
+ ],
+ "scale": 0.1286,
+ "bg": "qwantani_dusk_2_puresky_bg.jpg",
+ "env": "qwantani_dusk_2_puresky_env.png",
+ "envMax": 8
+}

@@ -106,6 +106,8 @@ body.touch #prompt { bottom: auto; top: calc(128px + env(safe-area-inset-top, 0p
 .mark { position: absolute; left: 0; top: 0; width: 80px; margin: -7px 0 0 -40px; display: grid; justify-items: center; gap: 3px; pointer-events: none; font: 600 11px var(--mono); color: #ffcf5a; text-shadow: 0 1px 2px #000; }
 .mark i { width: 10px; height: 10px; transform: rotate(45deg); border: 2px solid currentColor; box-shadow: 0 0 4px rgba(0,0,0,.7); }
 .mark.rich { color: #6fe88c; }
+.mark.obj { color: #5fd0ff; }
+.corner .small.obj { color: #8fdcff; max-width: 260px; margin-top: 4px; }
 .mark.enemy { color: #ff5a4a; }
 .mark.enemy i { width: 8px; height: 8px; background: currentColor; }
 #flashFx { position: fixed; inset: 0; z-index: 3; pointer-events: none; opacity: 0; background: #fffdf4; }
@@ -235,6 +237,13 @@ kbd { font-family: var(--mono); font-size: 11px; color: var(--fg); background: v
 .history th { text-align: left; font-weight: 600; color: var(--muted); border-bottom: 1px solid var(--line); padding: 4px 8px 4px 0; }
 .history td { padding: 4px 8px 4px 0; border-bottom: 1px solid color-mix(in srgb, var(--line) 50%, transparent); font-variant-numeric: tabular-nums; }
 .history tr.now td { color: var(--amber); }
+.record { display: grid; gap: 10px; margin-top: 8px; }
+.xpbar { height: 6px; background: var(--night); border: 1px solid var(--line); border-radius: 3px; overflow: hidden; }
+.xpbar i { display: block; height: 100%; width: 0; background: var(--amber); }
+.chal { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
+.chal li { display: grid; grid-template-columns: 1fr auto; gap: 2px 10px; font-family: var(--mono); font-size: 12px; color: var(--fg); border: 1px solid var(--line); padding: 6px 8px; }
+.chal li span { color: var(--muted); text-align: right; }
+.chal li .xpbar { grid-column: 1 / -1; height: 4px; }
 #historyOver table tr:nth-child(n + 7) { display: none; }
 /* online */
 .online { display: grid; gap: 12px; padding-top: 16px; border-top: 1px solid var(--line); }
@@ -309,7 +318,7 @@ body.touch .desk-only, body:not(.touch) .touch-only { display: none !important; 
 </div></div>
 
 <div id="hud" hidden>
-  <div class="corner tl"><div class="label">Wave</div><div class="big" id="waveNum">1</div><div class="small" id="left">0 robots left</div>
+  <div class="corner tl"><div class="label">Wave</div><div class="big" id="waveNum">1</div><div class="small" id="left">0 robots left</div><div class="small obj" id="objLine" hidden></div>
     <div class="label" style="margin-top:8px">Score</div><div class="big" id="score">0</div>
     <div id="mateBox" hidden><div id="mateLbl"></div><div class="bar"><div id="mateFill"></div></div></div>
     <div id="streakBox"><div class="label" style="margin-top:8px">Streak</div><div class="row"><span class="big" id="streakNum">0</span><span id="streakNext"></span></div><div id="streakPips"></div></div></div>
@@ -368,7 +377,7 @@ body.touch .desk-only, body:not(.touch) .touch-only { display: none !important; 
       <div><dt><kbd data-k="KeyW">W</kbd><kbd data-k="KeyA">A</kbd><kbd data-k="KeyS">S</kbd><kbd data-k="KeyD">D</kbd></dt><dd>Move, <kbd data-k="ShiftLeft">Shift</kbd> sprint</dd></div>
       <div><dt><kbd>Mouse</kbd></dt><dd>Aim. Left click fires</dd></div>
       <div><dt><kbd>Right click</kbd></dt><dd>Aim down sights</dd></div>
-      <div><dt><kbd>1</kbd>–<kbd>7</kbd></dt><dd>Weapons (or scroll), middle click last. Guns turn up round the base: check the map</dd></div>
+      <div><dt><kbd>1</kbd>–<kbd>8</kbd></dt><dd>Weapons (or scroll), middle click last. Guns turn up round the base: check the map</dd></div>
       <div><dt><kbd data-k="KeyQ">Q</kbd><kbd data-k="KeyE">E</kbd></dt><dd>Hold to lean left or right round cover</dd></div>
       <div><dt><kbd data-k="KeyR">R</kbd><kbd data-k="KeyI">I</kbd></dt><dd>Reload, inspect your weapon</dd></div>
       <div><dt><kbd data-k="Space">Space</kbd><kbd data-k="KeyC">C</kbd></dt><dd>Jump, crouch. Sprint + <kbd data-k="KeyC">C</kbd> slides</dd></div>
@@ -392,18 +401,33 @@ body.touch .desk-only, body:not(.touch) .touch-only { display: none !important; 
       <div class="gun"><b>3 · K7</b><span>Carbine with a red dot.</span></div>
       <div class="gun"><b>4 · Breacher</b><span>Shotgun. Barracks 1, upstairs (west side of the base).</span></div>
       <div class="gun"><b>5 · Longshot</b><span>Scoped sniper. On the HQ roof.</span></div>
+      <div class="gun"><b>8 · AA-12</b><span>Automatic shotgun off a drum. In the hangar.</span></div>
     </div>
-    <p class="lede foes"><b>Crawlers</b> rush and bite. <b>Sentinels</b> carry rifles, take cover and peek out to shoot; some carry a frag for when you go to ground. A chirp means one has just spotted you, and it tells the others near it. They look where they're facing, so you can slip past one looking the other way, but they hear gunfire (the suppressed SMG barely carries) and come to look. <b>Gunners</b> walk at you with miniguns. <b>Marksmen</b> snipe from rooftops, sweeping their sights across the base; you'll see their red laser before they fire. Drones and Brutes join later.</p>
+    <p class="lede foes"><b>Crawlers</b> rush and bite. <b>Sentinels</b> carry rifles, take cover and peek out to shoot; some carry a frag for when you go to ground. A chirp means one has just spotted you, and it tells the others near it. They look where they're facing, so you can slip past one looking the other way, but they hear gunfire (the suppressed SMG barely carries) and come to look. They work as a squad: some swing wide to come at you from the side, they keep firing at where you ducked out of sight for a moment, one badly hurt falls back to cover further off, and if they hear you reload close by they may rush you. <b>Gunners</b> walk at you with miniguns. <b>Marksmen</b> snipe from rooftops, sweeping their sights across the base; you'll see their red laser before they fire. Drones and Brutes join later.</p>
     <p class="lede foes"><b>Frags</b> bounce and blow apart groups; hold the key to cook one so it goes off sooner. <b>Smoke</b> hides you, so use it to cross open ground. <b>Flashbangs</b> blind every robot that sees the bang (and you, if you're looking). <b>EMP</b> freezes robots and drops drones. <b>Armour plates</b> soak up damage, <b>medkits</b> heal 60 and a <b>stim</b> makes you faster and tougher for 12 seconds.</p>
     <p class="lede foes"><b>Kill streaks</b> count robots you take down without dropping under 35 health. <b>3</b> puts every robot on your map for 15 s (otherwise it only shows the ones you can see or hear firing). <b>5</b> drops a supply crate on a parachute. <b>8</b> earns an airstrike: aim at open ground and press <kbd data-k="KeyB">B</kbd>, then get clear. Supply drops also come in during the fight: follow the red smoke and hold <kbd data-k="KeyE">E</kbd> to open them.</p>
     <p class="lede foes"><b>Cover</b> isn't all equal: rifle, LMG, DMR and sniper rounds go through plasterboard walls, wood and the hangar's sheet metal (weaker for it, and the robots' rounds do the same); pistol, SMG and shotgun rounds don't. Concrete, sandbags, HESCO and containers stop everything.</p>
-    <p class="lede foes"><b>Mortars</b>: from wave 4 the robots sometimes call a barrage down on where you are. Each round is marked by a red flare a couple of seconds before it lands; move.</p>
+    <p class="lede foes"><b>Patrols and the alarm</b>: each wave starts with a garrison already out on patrol round the base, somewhere different every time, and they haven't seen you yet. One that catches sight of you takes a moment to make you out; stay out of its view and it walks on. They go to look at gunfire they hear. Once one has you (or you shoot one, or a minute or so goes by and the base's sensors find you) the <b>alarm</b> sounds, every robot is told roughly where you are and the rest of the wave comes in. When they lose you they search where they last saw or heard you. A robot on patrol hit by the suppressed SMG takes a second or so to get on the radio: drop it before then and the alarm stays quiet, though others close by may hear the shots and come to look.</p>
+    <p class="lede foes"><b>Objectives</b>: each wave has one, marked in blue on screen and on the map. <b>Recover the intel</b> (a case somewhere indoors; hold <kbd data-k="KeyE">E</kbd> by it) shows every robot on your map for 25 s. <b>Destroy the comms uplink</b> (shoot or blow up the mast) stops it calling in two more robots when the alarm goes. <b>Hold the supply cache</b> (25 s inside its ring, in total) refills your ammo, armour and frags. <b>Eliminate the commander</b> (the robot with a red beacon) takes away its squad's sharper aim. Each pays points; the wave ends when its robots are down either way.</p>
+    <p class="lede foes"><b>Mid-wave events</b>: from wave 2, some waves bring something with them partway in. <b>Jamming</b>: for about half a minute your map and radar go to static and the compass wanders, but their radios are down too, so a robot that spots you can't call the others or raise the alarm until it lifts. <b>Fuel fire</b>: a fuel drum or tank catches a stray round, burns and goes up, and thick smoke drifts off it for most of a minute; nobody sees through it. <b>Mortars</b> (on your own, from wave 4): the robots call a barrage down on where you are. Each round is marked by a red flare a couple of seconds before it lands; move.</p>
     <p class="lede foes"><b>Fuel</b> burns: shoot the tanker by the fuel point, the bulk tanks inside it or the red drums beside some of the cover and they'll spray fire for a moment, then explode. Stand well back.</p>
     <p class="lede foes"><b>Training range</b>: targets at 10 to 60 m down the main road, one walking across, with every gun and unlimited ammo. Press Esc to see your hits and leave.</p>
     <p class="tip">Head and visor shots do double damage. Green crates refill ammo and top up frags and armour. Robots drop supplies.</p>
     <div class="actions"><button class="btn" id="startBtn" type="button" disabled>Deploy</button><button class="btn2" id="rangeBtn" type="button" disabled>Training range</button>
       <span class="note" id="bestMenu"></span></div>
     <details class="history"><summary class="sens">Last games</summary><div id="historyMenu"></div></details>
+    <details class="history" id="recordBox"><summary class="sens" id="recordSum">Service record</summary>
+      <div class="record">
+        <p class="small" id="rankLine"></p>
+        <div class="xpbar" aria-hidden="true"><i id="xpFill"></i></div>
+        <p class="small">Challenges (on your own or in co-op; a new one comes up as each is done)</p>
+        <ul class="chal" id="chalList"></ul>
+        <div class="opts">
+          <label class="sens" for="finishSet" title="A coat over the gun's painted and polymer parts. More come with rank">Gun finish <select id="finishSet"></select></label>
+          <label class="sens" for="reticleSet" title="The colour of the red dot and holographic sights. More come with rank">Sight reticle <select id="reticleSet"></select></label>
+        </div>
+      </div>
+    </details>
     <div id="menuOpts"><div class="opts" id="opts">
       <label class="sens" for="quality">Graphics <select id="quality"><option value="ultra">Extra high</option><option value="high">High</option><option value="medium">Medium</option><option value="low">Low</option><option value="vlow">Very low</option></select></label>
       <label class="sens" for="resSet" title="Auto lowers the resolution when the frame rate drops and raises it again when there's room">Resolution <select id="resSet"><option value="auto">Auto</option><option value="1">100%</option><option value="0.85">85%</option><option value="0.7">70%</option><option value="0.5">50%</option></select></label>
@@ -418,13 +442,14 @@ body.touch .desk-only, body:not(.touch) .touch-only { display: none !important; 
       <label class="sens desk-only" for="invertY">Invert look <input id="invertY" type="checkbox" style="width:auto"></label>
       <label class="sens" for="calm">Less camera shake <input id="calm" type="checkbox" style="width:auto"></label>
       <label class="sens" for="skill" title="How tightly the robots shoot, how quickly they react, how hard they hit and how far they hear you. Co-op plays at the host's setting">Difficulty <select id="skill"><option value="recruit">Recruit</option><option value="regular">Regular</option><option value="veteran">Veteran</option></select></label>
+      <label class="sens" for="timeOfDay" title="The light the base is fought in. Random picks a different one each run; in a match the host's choice is used. At dusk the robots can't see as far, and less far on an overcast day">Time of day <select id="timeOfDay"><option value="random">Random</option><option value="midday">Midday</option><option value="afternoon">Late afternoon</option><option value="dusk">Dusk</option><option value="overcast">Overcast</option></select></label>
       <label class="sens" for="hardcore" title="On your own: no HUD or crosshair, no health coming back, robots hit harder">Hardcore <input id="hardcore" type="checkbox" style="width:auto"></label>
       <label class="sens" for="startAt" title="On your own: later starts come with more guns and kit">Start at wave <select id="startAt"><option value="1">1</option><option value="5">5</option><option value="10">10</option></select></label>
       <details class="keys desk-only"><summary class="sens">Key bindings</summary><p class="small">Click an action, then press its new key (<kbd>Esc</kbd> to cancel). A key already in use swaps over. The arrow keys always move; <kbd>Esc</kbd>, <kbd>P</kbd>, <kbd>Tab</kbd> and the number keys stay as they are.</p><div id="keyList"></div><button class="btn2" id="keyReset" type="button">Reset keys</button> <span class="small" id="keyNote" role="status"></span></details>
     </div></div>
     <div class="online" id="onlinePanel">
       <h2>Play with a <em>friend</em></h2>
-      <p class="lede" style="font-size:14px"><b>PvP</b> loads you both into the hub in the hangar. At the match terminal (<kbd>E</kbd>, or <kbd>Tab</kbd> anywhere) the host picks <b>Gun Game</b> (a new gun after every kill, first to the kill target wins), <b>Duel rounds</b>, <b>Scavenger</b> (everyone starts with a pistol; grab the guns lying round the base) or <b>King of the Hill</b> (hold the glowing zone on your own to score; it moves every 45 s), and switches on no recoil, no camping, unlimited ammo or one-shot kills. Spawns are random and out of sight. <b>Co-op</b>: the two of you against the robot waves; hold <kbd>E</kbd> by a downed friend to revive them.</p>
+      <p class="lede" style="font-size:14px"><b>PvP</b> loads you both into the hub in the hangar. At the match terminal (<kbd>E</kbd>, or <kbd>Tab</kbd> anywhere) the host picks <b>Gun Game</b> (a new gun after every kill, first to the kill target wins), <b>Duel rounds</b> (one life each, best of three by default; you start in opposite halves of the base and swap sides every round), <b>Scavenger</b> (everyone starts with a pistol; grab the guns lying round the base) or <b>King of the Hill</b> (hold the glowing zone on your own to score; it moves every 45 s), and switches on no recoil, no camping, unlimited ammo or one-shot kills. Other spawns are random and out of sight. <b>Co-op</b>: the two of you against the robot waves; hold <kbd>E</kbd> by a downed friend to revive them.</p>
       <div class="row2"><label class="sens" for="callsign">Callsign <input class="field" id="callsign" maxlength="12" autocomplete="off" spellcheck="false"></label></div>
       <div class="row2"><button class="btn2" id="hostDuel" type="button" disabled>Host PvP</button><button class="btn2" id="hostCoop" type="button" disabled>Host co-op</button></div>
       <div id="gameList"></div>
@@ -432,12 +457,16 @@ body.touch .desk-only, body:not(.touch) .touch-only { display: none !important; 
       <p class="note" id="netNote">Connecting…</p>
     </div>
     <p class="small credits">Sky, textures and scanned props from <a href="https://polyhaven.com" target="_blank" rel="noopener">Poly Haven</a> (CC0).
-      Guns (extra high graphics), vehicles, containers and buildings from Sketchfab (CC BY 4.0):
+      Guns (high and extra high graphics), robots, vehicles, containers and buildings from Sketchfab (CC BY 4.0):
       <a href="https://sketchfab.com/3d-models/ar-15-style-rifle-50d33435445e439c95e3b36e9d4bd798" target="_blank" rel="noopener">AR-15 style rifle</a> by SpatialNeglect,
       <a href="https://sketchfab.com/3d-models/mp5-submachine-gun-a73b61932a0e4eecb5db5c63c158aa24" target="_blank" rel="noopener">MP5 Submachine Gun</a> by Rotuma,
       <a href="https://sketchfab.com/3d-models/remington-870-police-magnum-12-gauge-shotgun-eea11de7e9d24b6683962b8388c319eb" target="_blank" rel="noopener">Remington 870 Police Magnum</a> by 8sianDude,
       <a href="https://sketchfab.com/3d-models/lmg-8c24d7374ea64bdab1c30f49c69d5ed8" target="_blank" rel="noopener">LMG</a> by DJMaesen,
       <a href="https://sketchfab.com/3d-models/modern-sniper-rifle-free-lowpoly-45c99509f1ee4c2a8c9c3336d3e2ff5a" target="_blank" rel="noopener">Modern Sniper Rifle</a> by Vlasov Daniil,
+      <a href="https://sketchfab.com/3d-models/aa-12-redesign-c68a127798084ca7b302d6066bc23a25" target="_blank" rel="noopener">AA-12 Redesign</a> by Naudaff3D,
+      <a href="https://sketchfab.com/3d-models/biped-robot-801d2a245e4a4405a0c2152b35b5e486" target="_blank" rel="noopener">Biped robot</a> and <a href="https://sketchfab.com/3d-models/mech-drone-8d06874aac5246c59edb4adbe3606e0e" target="_blank" rel="noopener">Mech Drone</a> by Willy Decarpentrie,
+      <a href="https://sketchfab.com/3d-models/combat-robot-55fe65bbb4074979ac0cb44850df4ddc" target="_blank" rel="noopener">Combat Robot</a> by ilushandro,
+      <a href="https://sketchfab.com/3d-models/loudspeaker-tower-3fc77e2c976246ba9c950fc935a7ab24" target="_blank" rel="noopener">Loudspeaker Tower</a> by TampaJoey,
       <a href="https://sketchfab.com/3d-models/fp-arms-06ee1407117d4e5ab343becb4ee44bb6" target="_blank" rel="noopener">FP arms</a> by DJMaesen (sleeves recoloured), held the way DJMaesen's
       <a href="https://sketchfab.com/3d-models/fps-ak-animated-b0b1bae40337449189483f6187cf7af7" target="_blank" rel="noopener">AK</a>,
       <a href="https://sketchfab.com/3d-models/fps-animated-smg-ea3dad7478624495a5a46f40127b0579" target="_blank" rel="noopener">SMG</a>,
@@ -497,12 +526,13 @@ body.touch .desk-only, body:not(.touch) .touch-only { display: none !important; 
       <div><span class="label" id="oL4">Accuracy</span><span class="big" id="oAcc">0%</span></div>
     </div>
     <p class="note" id="oBest"></p>
+    <p class="note" id="oXp"></p>
     <div class="history" id="historyOver"></div>
     <div class="actions"><button class="btn" id="againBtn" type="button">Redeploy</button><button class="btn2" id="leaveBtn2" type="button" hidden>Leave match</button></div>
   </div></div>
 </section>
 
-<script src="game.js?v=13bd91b877"></script>
+<script src="game.js?v=2f504c0cd1"></script>
 
 </body>
 </html>

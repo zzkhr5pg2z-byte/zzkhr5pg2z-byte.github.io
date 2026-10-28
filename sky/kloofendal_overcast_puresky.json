@@ -1,0 +1,18 @@
+{
+ "id": "kloofendal_overcast_puresky",
+ "sun": [
+  0.8011,
+  0.3898,
+  0.4542
+ ],
+ "sunElevation": 22.9412,
+ "horizon": [
+  0.1963,
+  0.2064,
+  0.23
+ ],
+ "scale": 0.2861,
+ "bg": "kloofendal_overcast_puresky_bg.jpg",
+ "env": "kloofendal_overcast_puresky_env.png",
+ "envMax": 8
+}

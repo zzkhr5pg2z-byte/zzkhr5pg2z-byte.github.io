@@ -1,0 +1,18 @@
+{
+ "id": "lonely_road_afternoon_puresky",
+ "sun": [
+  0.7985,
+  0.1581,
+  0.5809
+ ],
+ "sunElevation": 9.0994,
+ "horizon": [
+  0.3013,
+  0.3855,
+  0.3952
+ ],
+ "scale": 0.413,
+ "bg": "lonely_road_afternoon_puresky_bg.jpg",
+ "env": "lonely_road_afternoon_puresky_env.png",
+ "envMax": 8
+}
