@@ -7,10 +7,17 @@ Used under the licences shown; CC BY models are credited in the game menu.
 - "Remington 870 Police Magnum 12 Gauge Shotgun" by 8sianDude (CC BY 4.0): https://sketchfab.com/3d-models/remington-870-police-magnum-12-gauge-shotgun-eea11de7e9d24b6683962b8388c319eb
 - "LMG" by DJMaesen (CC BY 4.0): https://sketchfab.com/3d-models/lmg-8c24d7374ea64bdab1c30f49c69d5ed8
 - "Modern Sniper Rifle | Free Lowpoly" by Vlasov Daniil (CC BY 4.0): https://sketchfab.com/3d-models/modern-sniper-rifle-free-lowpoly-45c99509f1ee4c2a8c9c3336d3e2ff5a
+- "AA-12 Redesign" by Naudaff3D (CC BY 4.0): https://sketchfab.com/3d-models/aa-12-redesign-c68a127798084ca7b302d6066bc23a25
+- "Biped robot" by Willy Decarpentrie (CC BY 4.0): https://sketchfab.com/3d-models/biped-robot-801d2a245e4a4405a0c2152b35b5e486
+- "Mech Drone" by Willy Decarpentrie (CC BY 4.0): https://sketchfab.com/3d-models/mech-drone-8d06874aac5246c59edb4adbe3606e0e
+- "Combat Robot" by ilushandro (CC BY 4.0): https://sketchfab.com/3d-models/combat-robot-55fe65bbb4074979ac0cb44850df4ddc
+- "Loudspeaker Tower" by TampaJoey (CC BY 4.0): https://sketchfab.com/3d-models/loudspeaker-tower-3fc77e2c976246ba9c950fc935a7ab24
 - "FP arms" by DJMaesen (CC BY 4.0): https://sketchfab.com/3d-models/fp-arms-06ee1407117d4e5ab343becb4ee44bb6
 - "HMMWV M998A1 (soft top)" by 42manako (CC BY 4.0): https://sketchfab.com/3d-models/hmmwv-m998a1-soft-top-ffbc4b053628413fb84acf5b89595d96
 - "Ural 4320" by Brout (CC BY 4.0): https://sketchfab.com/3d-models/ural-4320-f953c51a5dbc4a15949f4dcc0905c4e8
 - "Sikorsky UH-60M Blackhawk" by Muhamad Mirza Arrafi (CC BY 4.0): https://sketchfab.com/3d-models/sikorsky-uh-60m-blackhawk-12b4e525676a49678ac3006b360c8750
+- "F49 Orion-X6 6Gen FighterJet" by Cpt.Kirk (CC BY 4.0): https://sketchfab.com/3d-models/f49-orion-x6-6gen-fighterjet-6044962c974441fcb895392d577602d9
+- "Soldier Full Tactical Gear (LowPolyGameReady)" by DanlyVostok (CC BY 4.0): https://sketchfab.com/3d-models/soldier-full-tactical-gear-lowpolygameready-850593a8c7114c188395ba1849a66eb9
 - "Classic Shipping Container (Free/Gameready)" by Sebastian Webster (CC BY 4.0): https://sketchfab.com/3d-models/classic-shipping-container-freegameready-772f4be391a245f699c54e6cf157c58d
 - "Forklift Truck" by louis-muir (CC BY 4.0): https://sketchfab.com/3d-models/forklift-truck-060f3f8bc7de4e6ca2f348d414702e9d
 - "M978 HEMTT" by 42manako (CC BY 4.0): https://sketchfab.com/3d-models/m978-hemtt-d1a986c5d7f34d9eb027e612502c4874
