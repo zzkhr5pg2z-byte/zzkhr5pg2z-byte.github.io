@@ -18,6 +18,7 @@ Used under the licences shown; CC BY models are credited in the game menu.
 - "Sikorsky UH-60M Blackhawk" by Muhamad Mirza Arrafi (CC BY 4.0): https://sketchfab.com/3d-models/sikorsky-uh-60m-blackhawk-12b4e525676a49678ac3006b360c8750
 - "F49 Orion-X6 6Gen FighterJet" by Cpt.Kirk (CC BY 4.0): https://sketchfab.com/3d-models/f49-orion-x6-6gen-fighterjet-6044962c974441fcb895392d577602d9
 - "Soldier Full Tactical Gear (LowPolyGameReady)" by DanlyVostok (CC BY 4.0): https://sketchfab.com/3d-models/soldier-full-tactical-gear-lowpolygameready-850593a8c7114c188395ba1849a66eb9
+- "Water Tower" by Mehdi Shahsavan (CC BY 4.0): https://sketchfab.com/3d-models/water-tower-4e98f8c8fe4e4e9fae250a026974fe99
 - "Classic Shipping Container (Free/Gameready)" by Sebastian Webster (CC BY 4.0): https://sketchfab.com/3d-models/classic-shipping-container-freegameready-772f4be391a245f699c54e6cf157c58d
 - "Forklift Truck" by louis-muir (CC BY 4.0): https://sketchfab.com/3d-models/forklift-truck-060f3f8bc7de4e6ca2f348d414702e9d
 - "M978 HEMTT" by 42manako (CC BY 4.0): https://sketchfab.com/3d-models/m978-hemtt-d1a986c5d7f34d9eb027e612502c4874
