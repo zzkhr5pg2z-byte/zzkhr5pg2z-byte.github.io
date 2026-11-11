@@ -275,9 +275,10 @@ body.range #hud .corner.tl { visibility: hidden; }
 #versus .sub { font-family: var(--mono); font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); text-shadow: 0 1px 2px #000; }
 #count { position: fixed; left: 0; right: 0; top: 34%; z-index: 3; text-align: center; font-family: var(--display); font-size: clamp(60px, 14vw, 120px); color: var(--fg); text-shadow: 0 4px 0 rgba(0,0,0,.6); pointer-events: none; }
 #mateBox { margin-top: 10px; display: grid; gap: 3px; min-width: 150px; }
+#mateBox .mrow { display: grid; gap: 3px; }
 #mateBox .bar { height: 5px; }
-#mateFill { height: 100%; width: 100%; background: #6fb6ff; transition: width .15s; }
-#mateLbl { font-family: var(--mono); font-size: 12px; color: #9fd0ff; }
+#mateBox .bar i { display: block; height: 100%; width: 100%; background: #6fb6ff; transition: width .15s; }
+#mateBox .mlbl { font-family: var(--mono); font-size: 12px; color: #9fd0ff; }
 #downFx { position: fixed; inset: 0; z-index: 2; pointer-events: none; background: radial-gradient(ellipse at center, rgba(60,0,0,.15) 30%, rgba(80,0,0,.75) 100%); }
 #downLbl { position: fixed; left: 0; right: 0; top: 40%; z-index: 3; text-align: center; display: grid; gap: 6px; pointer-events: none; }
 #downLbl b { font-family: var(--display); font-weight: 400; font-size: 42px; color: var(--danger); }
@@ -322,7 +323,7 @@ body.touch .desk-only, body:not(.touch) .touch-only { display: none !important; 
 <div id="hud" hidden>
   <div class="corner tl"><div class="label">Wave</div><div class="big" id="waveNum">1</div><div class="small" id="left">0 robots left</div><div class="small obj" id="objLine" hidden></div>
     <div class="label" style="margin-top:8px">Score</div><div class="big" id="score">0</div>
-    <div id="mateBox" hidden><div id="mateLbl"></div><div class="bar"><div id="mateFill"></div></div></div>
+    <div id="mateBox" hidden></div>
     <div id="streakBox"><div class="label" style="margin-top:8px">Streak</div><div class="row"><span class="big" id="streakNum">0</span><span id="streakNext"></span></div><div id="streakPips"></div></div></div>
   <div class="corner tr"><canvas id="minimap" width="170" height="170" aria-label="Minimap"></canvas></div>
   <div id="feed" aria-live="polite"></div>
@@ -455,8 +456,8 @@ body.touch .desk-only, body:not(.touch) .touch-only { display: none !important; 
       <details class="keys desk-only"><summary class="sens">Key bindings</summary><p class="small">Click an action, then press its new key (<kbd>Esc</kbd> to cancel). A key already in use swaps over. The arrow keys always move; <kbd>Esc</kbd>, <kbd>P</kbd>, <kbd>Tab</kbd> and the number keys stay as they are.</p><div id="keyList"></div><button class="btn2" id="keyReset" type="button">Reset keys</button> <span class="small" id="keyNote" role="status"></span></details>
     </div></div>
     <div class="online" id="onlinePanel">
-      <h2>Play with a <em>friend</em></h2>
-      <p class="lede" style="font-size:14px"><b>PvP</b> loads you both into the hub in the hangar. At the match terminal (<kbd>E</kbd>, or <kbd>Tab</kbd> anywhere) the host picks <b>Gun Game</b> (a new gun after every kill, first to the kill target wins), <b>Duel rounds</b> (one life each, best of three by default; you start in opposite halves of the base and swap sides every round), <b>Scavenger</b> (everyone starts with a pistol; grab the guns lying round the base) or <b>King of the Hill</b> (hold the glowing zone on your own to score; it moves every 45 s), and switches on no recoil, no camping, unlimited ammo or one-shot kills. Other spawns are random and out of sight. <b>Co-op</b>: the two of you against the robot waves; hold <kbd>E</kbd> by a downed friend to revive them.</p>
+      <h2>Play with <em>friends</em></h2>
+      <p class="lede" style="font-size:14px">Up to <b>four players</b>: one hosts, the rest join with the code. <b>PvP</b> (everyone against everyone) loads you all into the hub. At the match terminal (<kbd>E</kbd>, or <kbd>Tab</kbd> anywhere) the host picks <b>Gun Game</b> (a new gun after every kill, first to the kill target wins), <b>Duel rounds</b> (one life each, last one standing takes the round, best of three by default; two of you start in opposite halves and swap every round, three or four are spread round the map), <b>Scavenger</b> (everyone starts with a pistol; grab the guns lying round the base) or <b>King of the Hill</b> (hold the glowing zone on your own to score; it moves every 45 s), and switches on no recoil, no camping, unlimited ammo or one-shot kills. A kill goes to whoever last hit you. Other spawns are random and out of sight. <b>Co-op</b>: all of you against the robot waves, which grow with every extra player; hold <kbd>E</kbd> by a downed teammate to revive them. Someone joining part way through comes straight in (in a duel, at the next round).</p>
       <div class="row2"><label class="sens" for="callsign">Callsign <input class="field" id="callsign" maxlength="12" autocomplete="off" spellcheck="false"></label></div>
       <div class="row2"><button class="btn2" id="hostDuel" type="button" disabled>Host PvP</button><button class="btn2" id="hostCoop" type="button" disabled>Host co-op</button></div>
       <div id="gameList"></div>
@@ -542,7 +543,7 @@ body.touch .desk-only, body:not(.touch) .touch-only { display: none !important; 
   </div></div>
 </section>
 
-<script src="game.js?v=2b98e11157"></script>
+<script src="game.js?v=a2e3d290df"></script>
 
 </body>
 </html>
