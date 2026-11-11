@@ -150,6 +150,8 @@ body.touch #items { bottom: auto; top: calc(78px + env(safe-area-inset-top, 0px)
 .scope-info { position: absolute; left: 50%; bottom: calc(50% - var(--r) - 34px); transform: translateX(-50%); display: flex; gap: 14px; font-family: var(--mono); font-size: 12px; color: var(--muted); letter-spacing: .1em; text-transform: uppercase; }
 #scope.steady .breath { color: var(--hull); }
 
+#board tr.me td { color: #ffd27a; }
+#board tr.gone td { opacity: .45; }
 #board { position: fixed; left: 50%; top: 18%; transform: translateX(-50%); z-index: 4; width: min(640px, calc(100vw - 32px)); padding: 16px 18px; background: color-mix(in srgb, var(--night) 88%, transparent); border: 1px solid var(--line); border-radius: 4px; pointer-events: none; }
 #board .bh { display: flex; gap: 18px; align-items: baseline; font-family: var(--mono); font-size: 13px; color: var(--muted); letter-spacing: .08em; text-transform: uppercase; margin-bottom: 10px; }
 #board .bh b { font-family: var(--display); font-weight: 400; font-size: 30px; color: var(--amber); letter-spacing: 0; margin-left: 6px; }
@@ -341,7 +343,7 @@ body.touch .desk-only, body:not(.touch) .touch-only { display: none !important; 
   <div id="cook" hidden><b id="cookNum">2.4</b><span>cooking</span></div>
 </div>
 <div id="board" hidden>
-  <div class="bh"><span>Wave <b id="bWave">1</b></span><span id="bTime">0:00</span><span id="bLeft"></span></div>
+  <div class="bh"><span><span id="bWaveL">Wave</span> <b id="bWave">1</b></span><span id="bTime">0:00</span><span id="bLeft"></span></div>
   <table><thead><tr><th>Soldier</th><th>Robots</th><th>Eye shots</th><th>Score</th><th>Accuracy</th><th>Best streak</th></tr></thead><tbody id="bRows"></tbody></table>
   <div class="note" id="bFoot"></div>
 </div>
@@ -457,7 +459,7 @@ body.touch .desk-only, body:not(.touch) .touch-only { display: none !important; 
     </div></div>
     <div class="online" id="onlinePanel">
       <h2>Play with <em>friends</em></h2>
-      <p class="lede" style="font-size:14px">Up to <b>four players</b>: one hosts, the rest join with the code. <b>PvP</b> (everyone against everyone) loads you all into the hub. At the match terminal (<kbd>E</kbd>, or <kbd>Tab</kbd> anywhere) the host picks <b>Gun Game</b> (a new gun after every kill, first to the kill target wins), <b>Duel rounds</b> (one life each, last one standing takes the round, best of three by default; two of you start in opposite halves and swap every round, three or four are spread round the map), <b>Scavenger</b> (everyone starts with a pistol; grab the guns lying round the base) or <b>King of the Hill</b> (hold the glowing zone on your own to score; it moves every 45 s), and switches on no recoil, no camping, unlimited ammo or one-shot kills. A kill goes to whoever last hit you. Other spawns are random and out of sight. <b>Co-op</b>: all of you against the robot waves, which grow with every extra player; hold <kbd>E</kbd> by a downed teammate to revive them. Someone joining part way through comes straight in (in a duel, at the next round).</p>
+      <p class="lede" style="font-size:14px">Up to <b>four players</b>: one hosts, the rest join with the code. <b>PvP</b> (everyone against everyone) loads you all into the hub. At the match terminal (<kbd>E</kbd>, or <kbd>Tab</kbd> anywhere) the host picks <b>Gun Game</b> (a new gun after every kill, first to the kill target wins), <b>Duel rounds</b> (one life each, last one standing takes the round, best of three by default; two of you start in opposite halves and swap every round, three or four are spread round the map), <b>Scavenger</b> (everyone starts with a pistol; grab the guns lying round the base) or <b>King of the Hill</b> (hold the glowing zone on your own to score; it moves every 45 s) or <b>Team Deathmatch</b> (Blue against Red, two a side with four of you; no friendly fire, your team on your map and named over their heads, first team to the kill target), and switches on no recoil, no camping, unlimited ammo or one-shot kills. A kill goes to whoever last hit you. Hold <kbd>Tab</kbd> during a match for the scoreboard. Other spawns are random and out of sight. <b>Co-op</b>: all of you against the robot waves, which grow with every extra player; hold <kbd>E</kbd> by a downed teammate to revive them. Someone joining part way through comes straight in (in a duel, at the next round).</p>
       <div class="row2"><label class="sens" for="callsign">Callsign <input class="field" id="callsign" maxlength="12" autocomplete="off" spellcheck="false"></label></div>
       <div class="row2"><button class="btn2" id="hostDuel" type="button" disabled>Host PvP</button><button class="btn2" id="hostCoop" type="button" disabled>Host co-op</button></div>
       <div id="gameList"></div>
@@ -505,7 +507,7 @@ body.touch .desk-only, body:not(.touch) .touch-only { display: none !important; 
     <p class="eyebrow">PvP hub · match code <span id="hubCode"></span></p>
     <h2>Match <em>settings</em></h2>
     <div class="set-grid">
-      <div class="set-row"><span>Mode</span><div class="seg" id="setRules"><button type="button" data-v="gungame">Gun Game</button><button type="button" data-v="duel">Duel rounds</button><button type="button" data-v="scav">Scavenger</button><button type="button" data-v="hill">King of the Hill</button></div></div>
+      <div class="set-row"><span>Mode</span><div class="seg" id="setRules"><button type="button" data-v="gungame">Gun Game</button><button type="button" data-v="duel">Duel rounds</button><button type="button" data-v="scav">Scavenger</button><button type="button" data-v="hill">King of the Hill</button><button type="button" data-v="tdm">Team Deathmatch</button></div></div>
       <div class="set-row"><span id="setTargetLbl">Kills to win</span><div class="seg" id="setTarget"></div></div>
       <label class="set-row" for="setNoRecoil"><span>No recoil</span><input type="checkbox" id="setNoRecoil"></label>
       <label class="set-row" for="setNoCamp"><span>No camping (move every 10 s)</span><input type="checkbox" id="setNoCamp"></label>
@@ -543,7 +545,7 @@ body.touch .desk-only, body:not(.touch) .touch-only { display: none !important; 
   </div></div>
 </section>
 
-<script src="game.js?v=287ccadedd"></script>
+<script src="game.js?v=fcf27ad4f1"></script>
 
 </body>
 </html>
