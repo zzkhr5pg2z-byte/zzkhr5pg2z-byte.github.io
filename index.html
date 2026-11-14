@@ -111,6 +111,9 @@ body.touch #prompt { bottom: auto; top: calc(128px + env(safe-area-inset-top, 0p
 .mark.enemy { color: #ff5a4a; }
 .mark.say { color: #ffb04a; font-size: 12px; letter-spacing: .04em; text-transform: uppercase; }
 .mark.say i { display: none; }
+.mark.ping { color: #ffe066; }
+.mark.ping.foe { color: #ff6a4a; }
+.mark.ping i { width: 12px; height: 12px; border-radius: 50%; transform: none; }
 .mark.enemy i { width: 8px; height: 8px; background: currentColor; }
 #flashFx { position: fixed; inset: 0; z-index: 3; pointer-events: none; opacity: 0; background: #fffdf4; }
 #dmgdir { position: absolute; left: 50%; top: 50%; width: 0; height: 0; opacity: 0; }
@@ -281,6 +284,9 @@ body.range #hud .corner.tl { visibility: hidden; }
 #mateBox .bar { height: 5px; }
 #mateBox .bar i { display: block; height: 100%; width: 100%; background: #6fb6ff; transition: width .15s; }
 #mateBox .mlbl { font-family: var(--mono); font-size: 12px; color: #9fd0ff; }
+#mateBox.many { gap: 2px; }
+#mateBox.many .mrow { grid-template-columns: 1fr 54px; align-items: center; gap: 6px; }
+#mateBox.many .mlbl { font-size: 11px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 #downFx { position: fixed; inset: 0; z-index: 2; pointer-events: none; background: radial-gradient(ellipse at center, rgba(60,0,0,.15) 30%, rgba(80,0,0,.75) 100%); }
 #downLbl { position: fixed; left: 0; right: 0; top: 40%; z-index: 3; text-align: center; display: grid; gap: 6px; pointer-events: none; }
 #downLbl b { font-family: var(--display); font-weight: 400; font-size: 42px; color: var(--danger); }
@@ -459,7 +465,7 @@ body.touch .desk-only, body:not(.touch) .touch-only { display: none !important; 
     </div></div>
     <div class="online" id="onlinePanel">
       <h2>Play with <em>friends</em></h2>
-      <p class="lede" style="font-size:14px">Up to <b>four players</b>: one hosts, the rest join with the code. <b>PvP</b> (everyone against everyone) loads you all into the hub. At the match terminal (<kbd>E</kbd>, or <kbd>Tab</kbd> anywhere) the host picks <b>Gun Game</b> (a new gun after every kill, first to the kill target wins), <b>Duel rounds</b> (one life each, last one standing takes the round, best of three by default; two of you start in opposite halves and swap every round, three or four are spread round the map), <b>Scavenger</b> (everyone starts with a pistol; grab the guns lying round the base) or <b>King of the Hill</b> (hold the glowing zone on your own to score; it moves every 45 s) or <b>Team Deathmatch</b> (Blue against Red, two a side with four of you; no friendly fire, your team on your map and named over their heads, first team to the kill target), and switches on no recoil, no camping, unlimited ammo or one-shot kills. A kill goes to whoever last hit you. Hold <kbd>Tab</kbd> during a match for the scoreboard. Other spawns are random and out of sight. <b>Co-op</b>: all of you against the robot waves, which grow with every extra player; hold <kbd>E</kbd> by a downed teammate to revive them. Someone joining part way through comes straight in (in a duel, at the next round).</p>
+      <p class="lede" style="font-size:14px">Up to <b>ten players</b>: one hosts, the rest join with the code. <b>PvP</b> (everyone against everyone) loads you all into the hub. At the match terminal (<kbd>E</kbd>, or <kbd>Tab</kbd> anywhere) the host picks <b>Gun Game</b> (a new gun after every kill, first to the kill target wins), <b>Duel rounds</b> (one life each, last one standing takes the round, best of three by default; two of you start in opposite halves and swap every round, more are spread round the map), <b>Scavenger</b> (everyone starts with a pistol; grab the guns lying round the base) or <b>King of the Hill</b> (hold the glowing zone on your own to score; it moves every 45 s) or <b>Team Deathmatch</b> (Blue against Red, up to five a side; no friendly fire, your team on your map and named over their heads, first team to the kill target), and switches on no recoil, no camping, unlimited ammo or one-shot kills. A kill goes to whoever last hit you; after a respawn you have two seconds of protection (until you fire). In Team Deathmatch everyone wears their team's colour, a band round the chest and arms. Hold <kbd>Tab</kbd> during a match for the scoreboard. In co-op and Team Deathmatch, press <kbd data-k="KeyN">N</kbd> to ping: it marks where you're aiming, or the enemy you're aiming at, for your side to see. Other spawns are random and out of sight. <b>Co-op</b>: all of you against the robot waves, which grow with every extra player; hold <kbd>E</kbd> by a downed teammate to revive them. Someone joining part way through comes straight in (in a duel, at the next round).</p>
       <div class="row2"><label class="sens" for="callsign">Callsign <input class="field" id="callsign" maxlength="12" autocomplete="off" spellcheck="false"></label></div>
       <div class="row2"><button class="btn2" id="hostDuel" type="button" disabled>Host PvP</button><button class="btn2" id="hostCoop" type="button" disabled>Host co-op</button></div>
       <div id="gameList"></div>
@@ -545,7 +551,7 @@ body.touch .desk-only, body:not(.touch) .touch-only { display: none !important; 
   </div></div>
 </section>
 
-<script src="game.js?v=fcf27ad4f1"></script>
+<script src="game.js?v=71dc63fb27"></script>
 
 </body>
 </html>
