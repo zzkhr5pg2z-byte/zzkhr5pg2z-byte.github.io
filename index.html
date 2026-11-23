@@ -37,13 +37,40 @@ input[type=text], input:not([type]), textarea { -webkit-user-select: text; user-
 #view { position: fixed; inset: 0; width: 100%; height: 100%; display: block; touch-action: none; }
 
 /* loading */
-#loading { position: fixed; inset: 0; z-index: 20; display: grid; place-items: center; background: var(--night); padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
-.load-in { width: min(420px, 100%); display: grid; gap: 12px; }
-.load-in h1 { font-family: var(--display); font-weight: 400; font-size: clamp(40px, 10vw, 64px); margin: 0; line-height: .95; }
+/* Loading: the briefing for the operation. The map's own picture (rendered from the game) full-bleed, drifting slowly,
+   a faint grid and a scan line over it; the briefing low on the left: map, place, mode, objective, the bar (by the
+   bytes that have actually arrived) and a tip. */
+#loading { position: fixed; inset: 0; z-index: 20; overflow: hidden; background: var(--night); display: grid; align-items: end; padding: max(18px, env(safe-area-inset-top, 0px)) max(16px, env(safe-area-inset-right, 0px)) max(18px, env(safe-area-inset-bottom, 0px)) max(16px, env(safe-area-inset-left, 0px)); }
+.ld-art { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transform-origin: 62% 40%; animation: ldDrift 26s ease-in-out infinite alternate; }
+.ld-shade { position: absolute; inset: 0; background: linear-gradient(90deg, rgba(14,16,13,.9) 0%, rgba(14,16,13,.55) 34%, rgba(14,16,13,0) 62%), linear-gradient(0deg, rgba(14,16,13,.85) 0%, rgba(14,16,13,0) 40%); }
+.ld-grid { position: absolute; inset: 0; opacity: .5; background-image: linear-gradient(rgba(236,232,218,.06) 1px, transparent 1px), linear-gradient(90deg, rgba(236,232,218,.06) 1px, transparent 1px); background-size: 48px 48px; -webkit-mask-image: radial-gradient(ellipse at 70% 40%, #000 0%, transparent 70%); mask-image: radial-gradient(ellipse at 70% 40%, #000 0%, transparent 70%); }
+.ld-scan { position: absolute; left: 0; right: 0; top: 0; height: 2px; background: linear-gradient(90deg, transparent, rgba(240,168,48,.5), transparent); box-shadow: 0 0 12px rgba(240,168,48,.35); animation: ldScan 5.5s linear infinite; }
+@keyframes ldDrift { from { transform: scale(1.04) translate(0, 0); } to { transform: scale(1.14) translate(-2%, 1%); } }
+@keyframes ldScan { from { transform: translateY(0); opacity: 0; } 8% { opacity: 1; } 92% { opacity: 1; } to { transform: translateY(100vh); opacity: 0; } }
+@keyframes ldBlink { 50% { opacity: .15; } }
+.load-in { position: relative; width: min(560px, 100%); display: grid; gap: 10px; }
+.load-in .eyebrow { display: flex; align-items: center; gap: 8px; margin: 0; }
+.ld-blink { width: 7px; height: 7px; background: var(--amber); animation: ldBlink 1.1s steps(1) infinite; }
+.load-in h1 { font-family: var(--display); font-weight: 400; font-size: clamp(40px, 8vw, 76px); margin: 0; line-height: .9; letter-spacing: .01em; text-shadow: 0 2px 18px rgba(0,0,0,.5); }
 .load-in h1 em { color: var(--amber); font-style: normal; }
-.load-bar { height: 6px; background: #2a2e26; }
-#loadFill { height: 100%; width: 0; background: var(--amber); transition: width .2s; }
-#loadLabel { font-family: var(--mono); font-size: 12px; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
+.ld-meta { display: flex; flex-wrap: wrap; gap: 6px 26px; margin: 0; }
+.ld-meta div { display: grid; gap: 2px; }
+.ld-meta dt { font: 600 10px var(--mono); letter-spacing: .16em; text-transform: uppercase; color: var(--muted); }
+.ld-meta dd { margin: 0; font: 600 14px var(--body); letter-spacing: .02em; }
+.ld-line { margin: 0; display: grid; grid-template-columns: 92px 1fr; gap: 10px; align-items: baseline; font-size: 14px; color: var(--fg); }
+.ld-line b { font: 600 10px var(--mono); letter-spacing: .16em; text-transform: uppercase; color: var(--amber); }
+.ld-tip { color: var(--muted); min-height: 2.6em; }
+.ld-tip span { transition: opacity .35s; }
+.ld-tip.swap span { opacity: 0; }
+.load-bar { position: relative; height: 4px; margin-top: 4px; background: rgba(236,232,218,.12); overflow: hidden; }
+#loadFill { height: 100%; width: 0; background: var(--amber); transition: width .25s; box-shadow: 0 0 10px rgba(240,168,48,.6); }
+.ld-row { display: flex; justify-content: space-between; gap: 12px; }
+#loadLabel, #loadPct { font-family: var(--mono); font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
+#loadPct { color: var(--fg); }
+@media (prefers-reduced-motion: reduce) { .ld-art, .ld-scan, .ld-blink { animation: none; } .ld-scan { display: none; } }
+/* (a phone on its side: the briefing small enough to leave the picture showing) */
+@media (max-height: 500px) { .load-in { width: min(460px, 100%); gap: 5px; } .load-in h1 { font-size: 40px; } .ld-meta dd { font-size: 12px; } .ld-meta dt, .ld-line b { font-size: 9px; } .ld-line { font-size: 12px; grid-template-columns: 74px 1fr; } .ld-tip { min-height: 0; } #loadLabel, #loadPct { font-size: 10px; } }
+@media (max-width: 600px) { .ld-line { grid-template-columns: 74px 1fr; font-size: 13px; } .ld-shade { background: linear-gradient(0deg, rgba(14,16,13,.96) 0%, rgba(14,16,13,.7) 55%, rgba(14,16,13,.2) 100%); } }
 
 /* HUD */
 #hud { position: fixed; inset: 0; z-index: 3; pointer-events: none; }
@@ -299,6 +326,51 @@ kbd { font-family: var(--mono); font-size: 11px; color: var(--fg); background: v
 /* the keys, shown in play for the first few runs */
 #keysHint { position: fixed; left: 50%; bottom: calc(118px + env(safe-area-inset-bottom, 0px)); transform: translateX(-50%); z-index: 5; max-width: min(94vw, 780px); padding: 8px 14px; background: rgba(18,20,17,.72); border: 1px solid var(--line); border-radius: 3px; pointer-events: none; transition: opacity .6s; }
 #keysHint.out { opacity: 0; }
+/* the match intro: cinematic bars, the briefing low on the left (as on the loading screen), the count in the middle */
+#intro { position: fixed; inset: 0; z-index: 6; pointer-events: none; }
+.in-bar { position: absolute; left: 0; right: 0; height: 9vh; background: #0b0c0a; transform: scaleY(0); animation: inBar .5s ease-out forwards; }
+.in-top { top: 0; transform-origin: top; } .in-bot { bottom: 0; transform-origin: bottom; }
+.in-card { position: absolute; left: max(28px, env(safe-area-inset-left, 0px)); bottom: calc(9vh + 22px); width: min(520px, calc(100vw - 56px)); display: grid; gap: 6px; padding-left: 14px; border-left: 3px solid var(--amber); animation: inCard .6s .15s ease-out backwards; }
+.in-eyebrow { display: flex; align-items: center; gap: 8px; margin: 0; font: 600 11px var(--mono); letter-spacing: .18em; text-transform: uppercase; color: var(--hull); }
+#inMap { margin: 0; font-family: var(--display); font-weight: 400; font-size: clamp(36px, 7vw, 72px); line-height: .9; text-shadow: 0 2px 18px rgba(0,0,0,.6); animation: inTitle .9s .2s ease-out backwards; }
+#inMode { margin: 0; font: 600 15px var(--mono); letter-spacing: .2em; text-transform: uppercase; color: var(--amber); }
+.in-meta { display: grid; gap: 4px; margin: 4px 0 0; }
+.in-meta div { display: grid; grid-template-columns: 96px 1fr; gap: 10px; align-items: baseline; }
+.in-meta dt { font: 600 10px var(--mono); letter-spacing: .16em; text-transform: uppercase; color: var(--muted); }
+.in-meta dd { margin: 0; font-size: 15px; text-shadow: 0 1px 6px rgba(0,0,0,.7); }
+.in-count { position: absolute; left: 50%; top: 40%; transform: translate(-50%, -50%); font-family: var(--display); font-size: clamp(64px, 12vw, 128px); color: var(--fg); text-shadow: 0 4px 24px rgba(0,0,0,.6); }
+.in-count.tick { animation: inTick .9s ease-out; }
+.in-skip { position: absolute; right: max(24px, env(safe-area-inset-right, 0px)); bottom: calc(9vh + 18px); margin: 0; font: 600 10px var(--mono); letter-spacing: .16em; text-transform: uppercase; color: var(--muted); }
+#intro.out { opacity: 0; transition: opacity .35s; }
+body.intro #hud, body.intro #touch .tbtn, body.intro #stick { opacity: 0; transition: opacity .3s; }
+@keyframes inBar { to { transform: scaleY(1); } }
+@keyframes inCard { from { opacity: 0; transform: translateX(-24px); } }
+@keyframes inTitle { from { letter-spacing: .3em; opacity: 0; } }
+@keyframes inTick { from { transform: translate(-50%, -50%) scale(1.5); opacity: 0; } 30% { opacity: 1; } }
+@media (prefers-reduced-motion: reduce) { .in-bar, .in-card, #inMap, .in-count.tick { animation: none; } .in-bar { transform: none; } }
+@media (max-height: 500px) { .in-card { bottom: calc(9vh + 8px); gap: 3px; } #inMap { font-size: 34px; } .in-meta dd { font-size: 13px; } }
+/* the tutorial card: under the compass, out of the line of fire; amber edge while a step is on, green once it's done */
+#tut { position: fixed; left: 50%; top: calc(44px + env(safe-area-inset-top, 0px)); transform: translateX(-50%); z-index: 5; width: min(440px, calc(100vw - 32px)); box-sizing: border-box; display: grid; gap: 6px; padding: 9px 14px 11px; background: rgba(18,20,17,.84); border: 1px solid var(--line); border-left: 3px solid var(--amber); pointer-events: none; }
+#tut.ok { border-left-color: var(--hull); }
+.tut-top { display: flex; justify-content: space-between; align-items: center; gap: 10px; font: 600 10px var(--mono); letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
+#tutTitle { font-family: var(--display); font-weight: 400; font-size: 24px; line-height: 1; letter-spacing: .02em; }
+#tut.ok #tutTitle { color: var(--hull); }
+#tut.ok #tutTitle::after { content: "  Done"; font: 600 12px var(--mono); letter-spacing: .14em; text-transform: uppercase; vertical-align: middle; }
+#tutDo { display: flex; flex-wrap: wrap; align-items: center; gap: 4px; font: 500 13px var(--mono); color: var(--fg); }
+#tutDo kbd { margin: 0 2px; }
+.tut-dots { display: flex; gap: 4px; margin-top: 2px; }
+.tut-dots i { flex: 1; height: 3px; background: var(--line); }
+.tut-dots i.on { background: var(--amber); }
+#tutSkip { pointer-events: auto; font: 600 11px var(--mono); letter-spacing: .14em; text-transform: uppercase; color: var(--fg); background: none; border: 1px solid var(--line); padding: 5px 10px; }
+#tutRing { position: absolute; width: 90px; height: 90px; transform: translate(-50%, -50%); pointer-events: none; }
+#tutRing i { display: block; width: 100%; height: 100%; box-sizing: border-box; border-radius: 50%; border: 3px solid var(--amber); animation: thPulse 1.2s ease-out infinite; }
+#tutRing.swipe i { border-style: dashed; animation: thSwipe 1.8s ease-in-out infinite; }
+/* (on a phone on its side the compass and health run up the middle: the card goes to the left, clear of them) */
+@media (orientation: landscape) and (max-height: 500px) {
+  /* (as wide as the room left of the compass, which is min(320px, 60vw) across the middle) */
+  body.touch #tut { left: calc(10px + env(safe-area-inset-left, 0px)); transform: none; top: calc(6px + env(safe-area-inset-top, 0px)); width: calc(50vw - min(160px, 30vw) - 20px - env(safe-area-inset-left, 0px)); padding: 7px 10px 9px; gap: 4px; }
+  body.touch #tutTitle { font-size: 18px; } body.touch #tutDo { font-size: 12px; } body.touch .tut-top { letter-spacing: .06em; font-size: 9px; } body.touch #tutSkip { padding: 3px 7px; letter-spacing: .06em; }
+}
 #touchHint { position: absolute; inset: 0; pointer-events: none; transition: opacity .6s; }
 #touchHint.out { opacity: 0; }
 .th { position: absolute; display: grid; justify-items: center; transform: translate(-50%, -42px); transition: opacity .4s; }
@@ -478,12 +550,55 @@ body.touch .desk-only, body:not(.touch) .touch-only { display: none !important; 
 
 <canvas id="view" aria-label="3D view of the base"></canvas>
 
-<div id="loading"><div class="load-in">
-  <p class="eyebrow">FOB Kestrel</p>
-  <h1>Iron <em>Perimeter</em></h1>
-  <div class="load-bar"><div id="loadFill"></div></div>
-  <div id="loadLabel">Loading</div>
-</div></div>
+<div id="loading">
+  <img class="ld-art" id="ldArt" alt="" src="art/base.jpg" decoding="async">
+  <div class="ld-shade"></div><div class="ld-grid" aria-hidden="true"></div><div class="ld-scan" aria-hidden="true"></div>
+  <div class="load-in">
+    <p class="eyebrow"><span class="ld-blink"></span>Iron Perimeter · Operation briefing</p>
+    <h1 id="ldMap">FOB <em>Kestrel</em></h1>
+    <dl class="ld-meta"><div><dt>Location</dt><dd id="ldLoc">Forward operating base, high desert</dd></div><div><dt>Mode</dt><dd id="ldMode">Wave defence</dd></div></dl>
+    <p class="ld-line"><b>Objective</b><span id="ldObj">Hold the base against wave after wave of robots.</span></p>
+    <div class="load-bar"><div id="loadFill"></div></div>
+    <div class="ld-row"><span id="loadLabel">Loading</span><span id="loadPct">0%</span></div>
+    <p class="ld-line ld-tip" id="ldTipRow"><b>Tip</b><span id="ldTip">Head and visor shots do double damage.</span></p>
+  </div>
+</div>
+<script>
+// The briefing for the map that's coming (the address, or the last map picked; the game confirms it as it starts), and
+// a new tip every few seconds while loading
+(function () {
+  var MAPS = {
+    base: { name: 'FOB <em>Kestrel</em>', loc: 'Forward operating base, high desert', art: 'art/base.jpg' },
+    killhouse: { name: 'The <em>Killhouse</em>', loc: 'Close-quarters training compound', art: 'art/killhouse.jpg' }
+  };
+  var MODES = {
+    waves: ['Wave defence', 'Hold the base against wave after wave of robots.'],
+    online: ['Online match', 'Joining your squad\'s match.']
+  };
+  var TIPS = ['Head and visor shots do double damage.', 'Green crates refill your ammo and top up frags and armour.',
+    'Sprint, then crouch to slide: you keep your speed into cover.', 'Robots close enough to hear you reload may rush you. Reload in cover.',
+    'Kill streaks call in a radar sweep, then an airstrike.', 'Lean round a corner to shoot without stepping out.',
+    'Jump at a low wall to climb straight over it.', 'Clearing a wave on your own gives back health, a medkit and a frag.',
+    'Throw a smoke to cross open ground without being seen.', 'Grenades bounce: hold the throw key to see where one will land.'];
+  function el(id) { return document.getElementById(id); }
+  window.__briefing = function (map, mode) {
+    var m = MAPS[map] || MAPS.base, d = MODES[mode] || MODES.waves;
+    el('ldMap').innerHTML = m.name; el('ldLoc').textContent = m.loc; el('ldMode').textContent = d[0]; el('ldObj').textContent = d[1];
+    var art = el('ldArt'); if (art && art.getAttribute('src') !== m.art) art.setAttribute('src', m.art);
+  };
+  var map = 'base', q = location.hash + '&' + location.search;
+  var hm = /[#&?]map=([a-z]+)/.exec(q);
+  if (hm) map = hm[1]; else { try { map = localStorage.getItem('iron-perimeter-map') || 'base'; } catch (e) { /* storage blocked */ } }
+  window.__briefing(map, /[#&?](join|room)=/.test(q) ? 'online' : 'waves');
+  var art = el('ldArt'); if (art) art.onerror = function () { art.remove(); };
+  var i = Math.floor(Math.random() * TIPS.length); el('ldTip').textContent = TIPS[i];
+  var t = setInterval(function () {
+    if (el('loading').hidden || getComputedStyle(el('loading')).display === 'none') { clearInterval(t); return; }
+    var row = el('ldTipRow'); row.classList.add('swap');
+    setTimeout(function () { i = (i + 1) % TIPS.length; el('ldTip').textContent = TIPS[i]; row.classList.remove('swap'); }, 350);
+  }, 5200);
+})();
+</script>
 
 <div id="hud" hidden>
   <div class="corner tl"><div class="label">Wave</div><div class="big" id="waveNum">1</div><div class="small" id="left">0 robots left</div><div class="small obj" id="objLine" hidden></div>
@@ -515,6 +630,13 @@ body.touch .desk-only, body:not(.touch) .touch-only { display: none !important; 
 <div id="stimFx"></div>
 <div id="vignette"></div>
 <div id="banner" aria-live="polite"></div>
+<!-- the match intro: letterbox bars, the camera swooping down into your eyes, the operation's briefing and a countdown -->
+<div id="intro" hidden aria-live="polite"><div class="in-bar in-top"></div><div class="in-bar in-bot"></div>
+  <div class="in-card"><p class="in-eyebrow"><span class="ld-blink"></span>Operation status: active</p><h2 id="inMap"></h2><p id="inMode"></p>
+    <dl class="in-meta"><div id="inTeamRow"><dt>Your team</dt><dd id="inTeam"></dd></div><div><dt>Objective</dt><dd id="inObj"></dd></div></dl></div>
+  <div class="in-count" id="inCount"></div><p class="in-skip"><span class="desk-only">Any key to skip</span><span class="touch-only">Tap to skip</span></p></div>
+<!-- the tutorial (a first visit's guided start, in the training range): the step, its keys, progress; ticked off when done -->
+<div id="tut" hidden aria-live="polite"><div class="tut-top"><span id="tutStep"></span><span class="desk-only">Esc: pause or skip</span><button type="button" class="touch-only" id="tutSkip">Skip</button></div><b id="tutTitle"></b><div id="tutDo"></div><div class="tut-dots" id="tutDots"></div></div>
 <div id="keysHint" hidden aria-hidden="true">
   <div class="kh desk-only"><span><kbd data-k="KeyW">W</kbd><kbd data-k="KeyA">A</kbd><kbd data-k="KeyS">S</kbd><kbd data-k="KeyD">D</kbd> move</span><span><kbd>Mouse</kbd> aim</span><span><kbd>Left click</kbd> fire</span><span><kbd>Right click</kbd> sights</span><span><kbd data-k="ShiftLeft">Shift</kbd> sprint</span><span><kbd data-k="KeyR">R</kbd> reload</span><span><kbd data-k="KeyE">E</kbd> use</span><span><kbd>1</kbd>–<kbd>8</kbd> guns</span><span><kbd>Esc</kbd> pause</span></div>
 </div>
@@ -524,6 +646,7 @@ body.touch .desk-only, body:not(.touch) .touch-only { display: none !important; 
 
 <div id="touch" hidden>
   <!-- first runs on a phone: where to put your thumbs, each prompt gone once you've done it -->
+  <div id="tutRing" hidden aria-hidden="true"><i></i></div>
   <div id="touchHint" hidden aria-hidden="true"><div class="th" id="thMove"><i></i><b>Move</b></div><div class="th" id="thLook"><i></i><b>Look</b></div><div class="th" id="thFire"><i></i><b>Fire</b></div></div>
   <div id="stick"><div id="knob"></div></div>
   <button class="tbtn" id="tJump" type="button">Jump</button>
@@ -640,6 +763,7 @@ body.touch .desk-only, body:not(.touch) .touch-only { display: none !important; 
     </div></div>
     </div>
     <div class="tab" id="panel-guide" role="tabpanel" aria-labelledby="tab-guide" hidden>
+    <div class="actions"><button class="btn2" id="tutBtn" type="button">Play the tutorial</button></div>
     <dl class="controls desk-only">
       <div><dt><kbd data-k="KeyW">W</kbd><kbd data-k="KeyA">A</kbd><kbd data-k="KeyS">S</kbd><kbd data-k="KeyD">D</kbd></dt><dd>Move, <kbd data-k="ShiftLeft">Shift</kbd> sprint</dd></div>
       <div><dt><kbd>Mouse</kbd></dt><dd>Aim. Left click fires</dd></div>
@@ -752,6 +876,14 @@ body.touch .desk-only, body:not(.touch) .touch-only { display: none !important; 
   </div></div>
 </section>
 
+<section class="overlay" id="tutEnd" hidden>
+  <div class="card ask"><div class="card-in">
+    <p class="eyebrow">Training complete</p>
+    <h2>Ready to <em>deploy</em></h2>
+    <p class="lede">Robots come in waves from the edges of the base. Clear each wave, grab green crates for ammo, and keep moving.</p>
+    <div class="actions"><button class="btn" id="tutDeploy" type="button">Deploy</button><button class="btn2" id="tutStay" type="button">Stay in the range</button></div>
+  </div></div>
+</section>
 <section class="overlay" id="gfxAsk" hidden>
   <div class="card ask"><div class="card-in">
     <p class="eyebrow">Iron Perimeter</p>
@@ -813,7 +945,7 @@ body.touch .desk-only, body:not(.touch) .touch-only { display: none !important; 
 </section>
 
 <div id="adCover" hidden><div><b>Advertisement</b><span>The game carries on after this.</span></div></div>
-<script>window.__builtAssets = true;</script><script src="game.js?v=a0cc828043"></script>
+<script>window.__builtAssets = true;</script><script src="game.js?v=e19f4654d8"></script>
 
 </body>
 </html>
