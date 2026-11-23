@@ -30,8 +30,10 @@
   color-scheme: dark;
 }
 [hidden] { display: none !important; }
-html, body { height: 100%; overflow: hidden; }
-body { margin: 0; background: var(--night); color: var(--fg); font-family: var(--body); font-size: 15px; -webkit-user-select: none; user-select: none; }
+html, body { height: 100%; overflow: hidden; overscroll-behavior: none; }
+body { margin: 0; background: var(--night); color: var(--fg); font-family: var(--body); font-size: 15px; -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; -webkit-tap-highlight-color: transparent; }
+/* (nothing on the page selects on a long press, but the text boxes - callsign, room and friend codes - still take typing on an iPhone) */
+input[type=text], input:not([type]), textarea { -webkit-user-select: text; user-select: text; }
 #view { position: fixed; inset: 0; width: 100%; height: 100%; display: block; touch-action: none; }
 
 /* loading */
@@ -195,9 +197,43 @@ body.touch .bl { bottom: auto; top: calc(14px + env(safe-area-inset-top, 0px)); 
 body.touch .br { bottom: calc(196px + env(safe-area-inset-bottom, 0px)); }
 body.touch .big { font-size: 30px; }
 body.touch #feed { top: calc(150px + env(safe-area-inset-top, 0px)); }
+/* Phones: no keyboard letters on the kit (it's shown, not pressed: NADE and HEAL use it) */
+body.touch #items { display: none; }
+.tbtn .cnt { position: absolute; top: -4px; right: -4px; min-width: 18px; height: 18px; padding: 0 4px; border-radius: 9px; background: var(--amber); color: #1a1406; font: 700 11px/18px var(--mono); font-style: normal; text-align: center; }
+.tbtn .cnt:empty { display: none; }
+body.touch .corner .small.obj { max-width: none; }
+/* on its side (the usual way to play): compass, health under it, the kit under that, all up the middle; the gun and
+   ammo at the bottom middle, between the stick and the buttons; the map and the numbers smaller */
+@media (orientation: landscape) {
+  body.touch .tl { gap: 1px; max-width: 26vw; }
+  body.touch .big { font-size: 22px; }
+  body.touch .tl .label { font-size: 9px; }
+  body.touch #minimap { width: 86px; height: 86px; }
+  body.touch #compass { width: min(260px, 34vw); }
+  body.touch .bl { top: calc(36px + env(safe-area-inset-top, 0px)); transform: translateX(-50%); }
+  body.touch .bl .bar { width: min(170px, 24vw); }
+  body.touch .tl { transform: scale(.8); transform-origin: top left; }
+  body.touch .br { bottom: calc(8px + env(safe-area-inset-bottom, 0px)); right: auto; left: 40%; transform: translateX(-50%) scale(.78); transform-origin: bottom center; justify-items: center; text-align: center; }
+}
+/* upright: the top is narrow (the numbers, the compass and the map share it), so health, the gun and the kit go down,
+   just above the controls */
+@media (orientation: portrait) {
+  body.touch .tl { max-width: 30vw; gap: 1px; }
+  body.touch .big { font-size: 24px; }
+  body.touch .tl .label { font-size: 9px; }
+  body.touch #minimap { width: 96px; height: 96px; }
+  body.touch #compass { width: 30vw; }
+  body.touch .bl { top: auto; bottom: calc(236px + env(safe-area-inset-bottom, 0px)); left: calc(14px + env(safe-area-inset-left, 0px)); transform: none; justify-items: start; text-align: left; }
+  body.touch .bl .bar { width: 110px; }
+  body.touch .br { bottom: calc(236px + env(safe-area-inset-bottom, 0px)); transform: scale(.85); transform-origin: bottom right; }
+  body.touch #feed { top: calc(190px + env(safe-area-inset-top, 0px)); }
+}
+@media (orientation: portrait) and (max-width: 360px) {
+  body.touch .br { transform: scale(.72); }
+}
 
 /* menus */
-.overlay { position: fixed; inset: 0; z-index: 10; display: grid; place-items: center; overflow-y: auto; background: rgba(12,13,11,.6); -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px); padding-block: calc(20px + env(safe-area-inset-top, 0px)) calc(20px + env(safe-area-inset-bottom, 0px)); padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); user-select: text; -webkit-user-select: text; }
+.overlay { position: fixed; inset: 0; z-index: 10; display: grid; place-items: center; overflow-y: auto; overscroll-behavior: contain; background: rgba(12,13,11,.6); -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px); padding-block: calc(20px + env(safe-area-inset-top, 0px)) calc(20px + env(safe-area-inset-bottom, 0px)); padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); user-select: text; -webkit-user-select: text; }
 .card { width: 100%; max-width: 680px; background: var(--plate); border: 1px solid var(--line); box-shadow: 0 30px 80px rgba(0,0,0,.6); }
 .card::before { content: ""; display: block; height: 8px; background: repeating-linear-gradient(-45deg, var(--amber) 0 12px, #15160f 12px 24px); }
 .card-in { padding: 24px clamp(18px, 5vw, 32px) 28px; display: grid; gap: 18px; }
@@ -219,7 +255,9 @@ kbd { font-family: var(--mono); font-size: 11px; color: var(--fg); background: v
 .tip { margin: 0; font-size: 14px; color: var(--amber); }
 .actions { display: flex; gap: 14px; align-items: center; flex-wrap: wrap; }
 /* the menu's Deploy row stays on screen while the briefing scrolls behind it (one click into the game) */
-.actions.dock { position: sticky; bottom: 0; z-index: 2; background: var(--plate); margin: 0 calc(-1 * clamp(18px, 5vw, 32px)); padding: 12px clamp(18px, 5vw, 32px); border-top: 1px solid var(--line); box-shadow: 0 -12px 24px rgba(0,0,0,.35); }
+/* (stuck to the very bottom of the screen, below the overlay's own padding, so nothing scrolls past underneath it;
+   on an iPhone its padding keeps the buttons above the home bar) */
+.actions.dock { position: sticky; bottom: calc(-20px - env(safe-area-inset-bottom, 0px)); z-index: 2; background: var(--plate); margin: 0 calc(-1 * clamp(18px, 5vw, 32px)); padding: 12px clamp(18px, 5vw, 32px) calc(12px + env(safe-area-inset-bottom, 0px)); border-top: 1px solid var(--line); box-shadow: 0 -12px 24px rgba(0,0,0,.35); }
 /* the menu's tabs: Play first, everything else a click away */
 .tabs { display: flex; gap: 2px; overflow-x: auto; scrollbar-width: none; border-bottom: 1px solid var(--line); margin-top: 4px; }
 .tabs::-webkit-scrollbar { display: none; }
@@ -261,6 +299,16 @@ kbd { font-family: var(--mono); font-size: 11px; color: var(--fg); background: v
 /* the keys, shown in play for the first few runs */
 #keysHint { position: fixed; left: 50%; bottom: calc(118px + env(safe-area-inset-bottom, 0px)); transform: translateX(-50%); z-index: 5; max-width: min(94vw, 780px); padding: 8px 14px; background: rgba(18,20,17,.72); border: 1px solid var(--line); border-radius: 3px; pointer-events: none; transition: opacity .6s; }
 #keysHint.out { opacity: 0; }
+#touchHint { position: absolute; inset: 0; pointer-events: none; transition: opacity .6s; }
+#touchHint.out { opacity: 0; }
+.th { position: absolute; display: grid; justify-items: center; transform: translate(-50%, -42px); transition: opacity .4s; }
+.th.done { opacity: 0; }
+.th i { display: block; width: 84px; height: 84px; border-radius: 50%; border: 2px solid var(--amber); animation: thPulse 1.4s ease-out infinite; }
+.th b { margin-top: 6px; font: 600 12px var(--mono); letter-spacing: .14em; text-transform: uppercase; color: var(--amber); text-shadow: 0 1px 3px #000; }
+#thLook i { width: 64px; height: 64px; border-style: dashed; animation: thSwipe 1.8s ease-in-out infinite; }
+@keyframes thPulse { 0% { box-shadow: 0 0 0 0 rgba(240,168,48,.55); } 100% { box-shadow: 0 0 0 22px rgba(240,168,48,0); } }
+@keyframes thSwipe { 0%, 100% { transform: translateX(-30px); } 50% { transform: translateX(30px); } }
+@media (prefers-reduced-motion: reduce) { .th i { animation: none; } }
 .kh { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px 16px; font-family: var(--mono); font-size: 12px; color: var(--fg); }
 .kh span { display: inline-flex; align-items: center; gap: 4px; white-space: nowrap; }
 .btn { font-family: var(--display); font-size: 22px; letter-spacing: .02em; padding: 12px 30px; border: 0; border-radius: 3px; background: var(--amber); color: #1a1406; cursor: pointer; }
@@ -302,6 +350,15 @@ kbd { font-family: var(--mono); font-size: 11px; color: var(--fg); background: v
 .xpbar { height: 6px; background: var(--night); border: 1px solid var(--line); border-radius: 3px; overflow: hidden; }
 .xpbar i { display: block; height: 100%; width: 0; background: var(--amber); }
 .chal { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
+/* the rank card on the Play tab: where you stand, what's next, the challenges on the go */
+.rankcard { display: grid; gap: 8px; padding: 12px 14px; border: 1px solid var(--line); background: rgba(240,168,48,.05); }
+.rankcard .rk { display: flex; align-items: center; gap: 12px; }
+.rankcard .badge { flex: 0 0 auto; min-width: 46px; padding: 6px 8px; text-align: center; font-family: var(--mono); font-size: 12px; font-weight: 600; letter-spacing: .06em; color: #1a1406; background: var(--amber); clip-path: polygon(50% 0, 100% 22%, 100% 78%, 50% 100%, 0 78%, 0 22%); }
+.rankcard .rk b { font-family: var(--display); font-weight: 400; font-size: 22px; line-height: 1; }
+.rankcard .rk span { margin-left: auto; font-family: var(--mono); font-size: 12px; color: var(--muted); white-space: nowrap; }
+.rankcard .chal li { font-size: 11px; padding: 5px 8px; }
+#oXpBar { max-width: 420px; }
+#oXpFill { transition: width 1.2s ease-out .3s; }
 .chal li { display: grid; grid-template-columns: 1fr auto; gap: 2px 10px; font-family: var(--mono); font-size: 12px; color: var(--fg); border: 1px solid var(--line); padding: 6px 8px; }
 .chal li span { color: var(--muted); text-align: right; }
 .chal li .xpbar { grid-column: 1 / -1; height: 4px; }
@@ -310,6 +367,52 @@ kbd { font-family: var(--mono); font-size: 11px; color: var(--fg); background: v
 .online { display: grid; gap: 12px; padding-top: 16px; border-top: 1px solid var(--line); }
 .online h2 { font-size: 26px; }
 .online .row2 { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+/* friends: your code, requests, and each friend with what they're doing */
+.friends { display: grid; gap: 10px; padding-top: 16px; border-top: 1px solid var(--line); }
+.friends h2 { font-size: 26px; }
+.fcode { font-family: var(--mono); font-size: 15px; letter-spacing: .12em; color: var(--amber); padding: 4px 8px; border: 1px dashed var(--line); user-select: all; -webkit-user-select: all; }
+.flist { display: grid; gap: 6px; }
+.frow { display: flex; align-items: center; gap: 10px; padding: 7px 10px; border: 1px solid var(--line); font-family: var(--mono); font-size: 12px; }
+.frow b { font-weight: 600; color: var(--fg); }
+.frow .st { color: var(--muted); }
+.frow .dot { flex: 0 0 auto; width: 8px; height: 8px; border-radius: 50%; background: #5b5f57; }
+.frow .dot.on { background: #4fbf5a; } .frow .dot.busy { background: var(--amber); }
+.frow .acts { margin-left: auto; display: flex; gap: 6px; }
+.frow .acts button { padding: 4px 10px; font-size: 11px; }
+.frow img { width: 22px; height: 22px; border-radius: 50%; }
+.frow.req { border-color: var(--amber); }
+/* the shop: credits, the daily drop, gun skins by tier */
+.tabs button.dot::after { content: ""; display: inline-block; width: 6px; height: 6px; margin-left: 6px; border-radius: 50%; background: var(--amber); vertical-align: middle; }
+.wallet { display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; }
+.wallet b { font-family: var(--display); font-weight: 400; font-size: 34px; color: var(--amber); line-height: 1; }
+.wallet .small { flex: 1 0 100%; }
+.daily { display: flex; align-items: center; gap: 12px; padding: 10px 12px; border: 1px solid var(--line); }
+.daily div { display: grid; gap: 2px; }
+.daily b { font-family: var(--mono); font-size: 13px; font-weight: 600; }
+.daily .btn { margin-left: auto; font-size: 17px; padding: 8px 18px; white-space: nowrap; }
+.daily .btn2 { margin-left: auto; }
+.shop { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 8px; }
+.skin { display: grid; gap: 5px; padding: 8px; border: 1px solid var(--line); background: rgba(0,0,0,.15); --t: #8e9086; }
+.skin.rare { --t: #5b8ed6; } .skin.epic { --t: #a46ad8; } .skin.legendary { --t: #f0b02a; }
+.skin { border-top: 3px solid var(--t); }
+.skin.on { outline: 2px solid var(--amber); outline-offset: -1px; }
+.skin .sw { height: 46px; border-radius: 2px; box-shadow: inset 0 0 0 1px rgba(0,0,0,.35); }
+.skin b { font-family: var(--mono); font-size: 12px; font-weight: 600; color: var(--fg); }
+.skin .tier { font-family: var(--mono); font-size: 10px; letter-spacing: .1em; text-transform: uppercase; color: var(--t); }
+.skin .price { font-family: var(--mono); font-size: 11px; color: var(--muted); }
+.skin button { padding: 5px 8px; font-size: 11px; }
+.skin.legendary .sw { animation: shine 3.5s linear infinite; background-size: 220% 100% !important; }
+@keyframes shine { from { background-position: 100% 0; } to { background-position: -120% 0; } }
+@media (prefers-reduced-motion: reduce) { .skin.legendary .sw { animation: none; } }
+.locker { display: grid; grid-template-columns: 210px 1fr; gap: 12px; align-items: start; }
+.locker:has(#lockerView[hidden]) { grid-template-columns: 1fr; }
+#lockerView { width: 210px; height: 300px; border: 1px solid var(--line); background: radial-gradient(ellipse at 50% 35%, #3a3d36 0%, #1b1d19 70%); }
+.kitside { display: grid; gap: 10px; align-content: start; min-width: 0; }
+.kitparts { flex-wrap: wrap; }
+@media (max-width: 560px) { .locker { grid-template-columns: 1fr; } #lockerView { width: 100%; height: 260px; } }
+.party { display: grid; gap: 8px; }
+#partyCode { width: 9em; text-transform: uppercase; }
+.pfriends { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin: 10px 0 2px; }
 .btn2 { font-family: var(--mono); font-size: 13px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; padding: 10px 16px; border: 1px solid var(--amber); border-radius: 3px; background: transparent; color: var(--amber); cursor: pointer; }
 .btn2:hover:not(:disabled) { background: rgba(240,168,48,.14); }
 .btn2:disabled { opacity: .45; cursor: default; }
@@ -414,21 +517,22 @@ body.touch .desk-only, body:not(.touch) .touch-only { display: none !important; 
 <div id="banner" aria-live="polite"></div>
 <div id="keysHint" hidden aria-hidden="true">
   <div class="kh desk-only"><span><kbd data-k="KeyW">W</kbd><kbd data-k="KeyA">A</kbd><kbd data-k="KeyS">S</kbd><kbd data-k="KeyD">D</kbd> move</span><span><kbd>Mouse</kbd> aim</span><span><kbd>Left click</kbd> fire</span><span><kbd>Right click</kbd> sights</span><span><kbd data-k="ShiftLeft">Shift</kbd> sprint</span><span><kbd data-k="KeyR">R</kbd> reload</span><span><kbd data-k="KeyE">E</kbd> use</span><span><kbd>1</kbd>–<kbd>8</kbd> guns</span><span><kbd>Esc</kbd> pause</span></div>
-  <div class="kh touch-only"><span>Left thumb: move</span><span>Right thumb: look</span><span>Hold Fire to shoot</span></div>
 </div>
 <div id="count" hidden></div>
 <div id="downFx" hidden></div>
 <div id="downLbl" hidden><b id="downTitle">Down</b><span id="downSub"></span></div>
 
 <div id="touch" hidden>
+  <!-- first runs on a phone: where to put your thumbs, each prompt gone once you've done it -->
+  <div id="touchHint" hidden aria-hidden="true"><div class="th" id="thMove"><i></i><b>Move</b></div><div class="th" id="thLook"><i></i><b>Look</b></div><div class="th" id="thFire"><i></i><b>Fire</b></div></div>
   <div id="stick"><div id="knob"></div></div>
   <button class="tbtn" id="tJump" type="button">Jump</button>
   <button class="tbtn" id="tSwap" type="button">Swap</button>
   <button class="tbtn" id="tCrouch" type="button">Crouch</button>
   <button class="tbtn" id="tReload" type="button">Reload</button>
   <button class="tbtn" id="tAim" type="button">Aim</button>
-  <button class="tbtn" id="tNade" type="button">Nade</button>
-  <button class="tbtn" id="tHeal" type="button">Heal</button>
+  <button class="tbtn" id="tNade" type="button">Nade<i class="cnt" id="tNadeN"></i></button>
+  <button class="tbtn" id="tHeal" type="button">Heal<i class="cnt" id="tHealN"></i></button>
   <button class="tbtn" id="tLeanL" type="button" aria-label="Lean left">&lsaquo; Lean</button>
   <button class="tbtn" id="tLeanR" type="button" aria-label="Lean right">Lean &rsaquo;</button>
   <button class="tbtn" id="tUse" type="button" hidden>Use</button>
@@ -442,8 +546,16 @@ body.touch .desk-only, body:not(.touch) .touch-only { display: none !important; 
     <p class="eyebrow">Forward Operating Base Kestrel</p>
     <h1>Iron <em>Perimeter</em></h1>
     <p class="lede">The base's security robots have turned on the garrison. You're the last one inside the wire: hold out.</p>
-    <nav class="tabs" role="tablist" aria-label="Menu"><button type="button" role="tab" id="tab-play" data-tab="play" aria-controls="panel-play" aria-selected="true">Play</button><button type="button" role="tab" id="tab-online" data-tab="online" aria-controls="panel-online" aria-selected="false">Online</button><button type="button" role="tab" id="tab-settings" data-tab="settings" aria-controls="panel-settings" aria-selected="false">Settings</button><button type="button" role="tab" id="tab-guide" data-tab="guide" aria-controls="panel-guide" aria-selected="false">How to play</button><button type="button" role="tab" id="tab-record" data-tab="record" aria-controls="panel-record" aria-selected="false">Record</button><button type="button" role="tab" id="tab-credits" data-tab="credits" aria-controls="panel-credits" aria-selected="false">Credits</button></nav>
+    <nav class="tabs" role="tablist" aria-label="Menu"><button type="button" role="tab" id="tab-play" data-tab="play" aria-controls="panel-play" aria-selected="true">Play</button><button type="button" role="tab" id="tab-online" data-tab="online" aria-controls="panel-online" aria-selected="false">Online</button><button type="button" role="tab" id="tab-shop" data-tab="shop" aria-controls="panel-shop" aria-selected="false">Shop</button><button type="button" role="tab" id="tab-settings" data-tab="settings" aria-controls="panel-settings" aria-selected="false">Settings</button><button type="button" role="tab" id="tab-guide" data-tab="guide" aria-controls="panel-guide" aria-selected="false">How to play</button><button type="button" role="tab" id="tab-record" data-tab="record" aria-controls="panel-record" aria-selected="false">Record</button><button type="button" role="tab" id="tab-credits" data-tab="credits" aria-controls="panel-credits" aria-selected="false">Credits</button></nav>
     <div class="tab" id="panel-play" role="tabpanel" aria-labelledby="tab-play">
+    <div class="rankcard" id="rankCard">
+      <div class="rk"><span class="badge" id="rcBadge">Rct</span><b id="rcRank">Recruit</b><span id="rcXp">0 XP</span></div>
+      <div class="xpbar" aria-hidden="true"><i id="rcFill"></i></div>
+      <p class="small" id="rcNext"></p>
+      <p class="small" id="rcMile"></p>
+      <p class="small"><span id="rcCr"></span> · <button type="button" class="linkbtn" id="rcShop">Open the shop</button></p>
+      <ul class="chal" id="rcChal"></ul>
+    </div>
     <div class="mapPick"><label class="sens" for="mapSel" title="Changing the map reloads the game">Map <select id="mapSel"><option value="base">FOB Kestrel: the open base</option><option value="killhouse">Killhouse: close quarters</option></select></label> <span class="note" id="mapNote"></span></div>
     <div class="opts" id="gameOpts">
       <label class="sens" for="skill" title="How tightly the robots shoot, how quickly they react, how hard they hit and how far they hear you. Co-op plays at the host's setting">Difficulty <select id="skill"><option value="recruit">Recruit</option><option value="regular">Regular</option><option value="veteran">Veteran</option></select></label>
@@ -461,6 +573,11 @@ body.touch .desk-only, body:not(.touch) .touch-only { display: none !important; 
         <h2>Quick <em>match</em></h2>
         <p class="lede" style="font-size:14px">Play people from anywhere: you're put in a match as soon as enough players are searching.</p>
         <div class="row2"><button class="btn2" id="quick1" type="button" disabled>1v1 duel</button><button class="btn2" id="quick2" type="button" disabled>2v2 team deathmatch</button></div>
+        <div class="party" id="partyBox">
+          <div class="row2"><button class="btn2" id="partyNew" type="button">Create party</button><input class="field code" id="partyCode" maxlength="6" placeholder="PARTY CODE" autocomplete="off" spellcheck="false" aria-label="Party code"><button class="btn2" id="partyJoin" type="button">Join party</button><button class="btn2" id="partyLeave" type="button" hidden>Leave party</button></div>
+          <div class="flist" id="partyList"></div>
+          <p class="note" id="partyNote" role="status">2v2 with a friend: one of you makes a party and gives the other its code. The leader presses 2v2 and you're matched together, on the same team, against two others.</p>
+        </div>
       </div>
       <h2>Play with <em>friends</em></h2>
       <p class="lede" style="font-size:14px">Up to <b>ten players</b>. One of you hosts and shares the four-letter code; the others join with it. <b>Co-op</b>: all of you against the robot waves. <b>PvP</b>: everyone starts in the hub, where the host picks the mode (Gun Game, Duel rounds, Scavenger, King of the Hill, Team Deathmatch) at the match terminal.</p>
@@ -469,7 +586,39 @@ body.touch .desk-only, body:not(.touch) .touch-only { display: none !important; 
       <div id="gameList"></div>
       <div class="row2"><input class="field code" id="joinCode" maxlength="4" placeholder="CODE" autocomplete="off" spellcheck="false" aria-label="Match code"><button class="btn2" id="joinBtn" type="button" disabled>Join</button></div>
       <p class="note" id="netNote">Connecting…</p>
+      <div class="friends" id="friendsBox" hidden>
+        <h2>Your <em>friends</em></h2>
+        <div class="row2"><span class="sens">Your friend code</span><code class="fcode" id="fCode">…</code><button class="btn2" id="fCopy" type="button">Copy</button></div>
+        <div class="row2"><input class="field" id="fAdd" maxlength="14" placeholder="THEIR CODE" autocomplete="off" spellcheck="false" aria-label="A friend's code"><button class="btn2" id="fAddBtn" type="button">Add friend</button></div>
+        <p class="note" id="fNote" role="status">Swap codes with a friend: once you've both added each other (or one adds and the other accepts) you'll see when they're on, and can join their game.</p>
+        <div class="flist" id="fIn"></div>
+        <div class="flist" id="fList"></div>
+      </div>
+      <div class="friends" id="cgFriendsBox" hidden>
+        <h2>CrazyGames <em>friends</em></h2>
+        <p class="note" id="cgfNote"></p>
+        <button class="btn2" id="cgSignIn" type="button" hidden>Sign in to CrazyGames</button>
+        <div class="flist" id="cgfList"></div>
+      </div>
     </div>
+    </div>
+    <div class="tab" id="panel-shop" role="tabpanel" aria-labelledby="tab-shop" hidden>
+    <div class="wallet"><b id="crBal">0</b><span>credits</span><span class="small">Earned by playing: every game, kills and wins, challenges, and the daily drop.</span></div>
+    <div class="daily" id="dailyBox"><div><b>Daily supply drop</b><span class="small" id="dailyLine"></span></div><button class="btn" id="dailyBtn" type="button">Claim</button></div>
+    <div class="daily" id="adCr" hidden><div><b>Watch an ad: +150 credits</b><span class="small" id="adCrNote"></span></div><button class="btn2" id="adCrBtn" type="button"><span aria-hidden="true">&#9654;</span> Watch</button></div>
+    <p class="note" id="shopNote" role="status"></p>
+    <h3 class="grp">Gun skins</h3>
+    <div class="shop" id="shopGrid"></div>
+    <p class="small">A skin covers every gun's painted and polymer parts. Nothing in the shop changes how a gun handles.</p>
+    <h3 class="grp">Your soldier</h3>
+    <div class="locker">
+      <canvas id="lockerView" aria-label="Your soldier, in your kit" hidden></canvas>
+      <div class="kitside">
+        <div class="seg kitparts" id="kitParts" role="group" aria-label="Part of your kit"></div>
+        <div class="shop" id="kitGrid"></div>
+      </div>
+    </div>
+    <p class="small">What the other players see you in. Your uniform's pattern comes with rank: pick it under Record.</p>
     </div>
     <div class="tab" id="panel-settings" role="tabpanel" aria-labelledby="tab-settings" hidden>
     <div id="menuOpts"><div class="opts" id="opts">
@@ -546,7 +695,7 @@ body.touch .desk-only, body:not(.touch) .touch-only { display: none !important; 
         <p class="small">Challenges (on your own or in co-op; a new one comes up as each is done)</p>
         <ul class="chal" id="chalList"></ul>
         <div class="opts">
-          <label class="sens" for="finishSet" title="A coat over the gun's painted and polymer parts. More come with rank">Gun finish <select id="finishSet"></select></label>
+          <label class="sens" for="camoSet" title="What your soldier wears: on your own sleeves, and as the other players see you. More come with rank">Uniform <select id="camoSet"></select></label>
           <label class="sens" for="reticleSet" title="The colour of the red dot and holographic sights. More come with rank">Sight reticle <select id="reticleSet"></select></label>
         </div>
       </div>
@@ -586,6 +735,7 @@ body.touch .desk-only, body:not(.touch) .touch-only { display: none !important; 
       <a href="https://sketchfab.com/3d-models/guard-booth-retextured-33594cafeabc482f9afa900b4607b564" target="_blank" rel="noopener">Guard booth (retextured)</a> by Кіт Васько;
       <a href="https://sketchfab.com/3d-models/military-tent-016f79c835e7427a83c434a9d5e8165e" target="_blank" rel="noopener">Military Tent</a> by dark-minaz;
       <a href="https://sketchfab.com/3d-models/basement-6a93c0b301014f22bd1eec9a3521e5c2" target="_blank" rel="noopener">basement</a> by user16.1914.</p>
+    <p class="small credits" id="creditsCg" hidden>Licences: CC0 (public domain), CC BY 4.0 (creativecommons.org/licenses/by/4.0) and the SIL Open Font License. Each source's address is in CREDITS.txt with the game's files.</p>
     </div>
     <div class="actions dock"><button class="btn" id="startBtn" type="button" disabled>Deploy</button><button class="btn2" id="rangeBtn" type="button" disabled>Training range</button>
       <span class="note" id="bestMenu"></span></div>
@@ -612,7 +762,7 @@ body.touch .desk-only, body:not(.touch) .touch-only { display: none !important; 
       <button type="button" data-q="high"><b>High</b><span>Gaming laptops and desktops</span></button>
       <button type="button" data-q="ultra"><b>Extra high</b><span>Fast graphics cards</span></button>
     </div>
-    <p class="note">Picking one starts the game. You can change it any time in Settings. <button type="button" class="linkbtn" id="gfxMenu">Menu instead</button></p>
+    <p class="note">You can change it any time in Settings. <button type="button" class="linkbtn" id="gfxMenu">Skip</button></p>
   </div></div>
 </section>
 
@@ -639,6 +789,7 @@ body.touch .desk-only, body:not(.touch) .touch-only { display: none !important; 
     <p class="lede">The robots will wait.</p>
     <div class="actions"><button class="btn" id="resumeBtn" type="button">Resume</button><button class="btn2" id="leaveBtn" type="button" hidden>Leave match</button><button class="btn2" id="inviteBtn" type="button" hidden>Copy invite link</button><span class="note">M toggles sound</span></div>
     <div class="rw" id="rwBox" hidden><button class="btn2" id="rwBtn" type="button"><span aria-hidden="true">&#9654;</span> Watch an ad: +1 medkit</button><span class="note" id="rwNote"></span></div>
+    <div class="pfriends" id="pauseFriends" hidden></div>
     <div id="pauseOpts"></div>
     <p class="note" id="pauseNote" hidden>The match keeps going while you're paused.</p>
   </div></div>
@@ -655,13 +806,14 @@ body.touch .desk-only, body:not(.touch) .touch-only { display: none !important; 
     </div>
     <p class="note" id="oBest"></p>
     <p class="note" id="oXp"></p>
+    <div class="xpbar" id="oXpBar" hidden aria-hidden="true"><i id="oXpFill"></i></div>
     <div class="history" id="historyOver"></div>
-    <div class="actions"><button class="btn" id="againBtn" type="button">Redeploy</button><button class="btn2" id="leaveBtn2" type="button" hidden>Leave match</button></div>
+    <div class="actions dock"><button class="btn" id="againBtn" type="button">Redeploy</button><button class="btn2" id="leaveBtn2" type="button" hidden>Leave match</button></div>
   </div></div>
 </section>
 
 <div id="adCover" hidden><div><b>Advertisement</b><span>The game carries on after this.</span></div></div>
-<script src="game.js?v=c03d959cda"></script>
+<script>window.__builtAssets = true;</script><script src="game.js?v=a0cc828043"></script>
 
 </body>
 </html>
