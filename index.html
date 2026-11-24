@@ -671,8 +671,8 @@ body.touch .desk-only, body:not(.touch) .touch-only { display: none !important; 
 <!-- Loading, two ways: opening the game, its title (our soldier, the name); loading a map (changing maps, or arriving by
      invite), that map's briefing (its picture, name, place, mode, objective). The bar, its megabytes and the tips in both. -->
 <div id="loading" class="is-title">
-  <div class="ld-hero" aria-hidden="true"><div class="ld-haze"></div><img class="mm-hero" alt="" src="art/hero.webp" decoding="async"><div class="mm-grade"></div></div>
-  <img class="ld-art" id="ldArt" alt="" src="art/base.jpg" decoding="async">
+  <div class="ld-hero" aria-hidden="true"><div class="ld-haze"></div><img class="mm-hero" alt="" src="art/hero.webp?v=fb65344027" decoding="async"><div class="mm-grade"></div></div>
+  <img class="ld-art" id="ldArt" alt="" src="art/base.jpg?v=68930a9e1c" decoding="async">
   <div class="ld-shade"></div><div class="ld-grid" aria-hidden="true"></div><div class="ld-scan" aria-hidden="true"></div>
   <div class="load-in">
     <div class="ld-logo" id="ldLogo">Iron <em>Perimeter</em></div>
@@ -690,8 +690,8 @@ body.touch .desk-only, body:not(.touch) .touch-only { display: none !important; 
 // a new tip every few seconds while loading
 (function () {
   var MAPS = {
-    base: { name: 'FOB <em>Kestrel</em>', loc: 'Forward operating base, high desert', art: 'art/base.jpg' },
-    killhouse: { name: 'The <em>Killhouse</em>', loc: 'Close-quarters training compound', art: 'art/killhouse.jpg' }
+    base: { name: 'FOB <em>Kestrel</em>', loc: 'Forward operating base, high desert', art: 'art/base.jpg?v=68930a9e1c' },
+    killhouse: { name: 'The <em>Killhouse</em>', loc: 'Close-quarters training compound', art: 'art/killhouse.jpg?v=40d5b8b122' }
   };
   var MODES = {
     waves: ['Wave defence', 'Hold the base against wave after wave of robots.'],
@@ -794,7 +794,7 @@ body.touch .desk-only, body:not(.touch) .touch-only { display: none !important; 
 <section class="overlay" id="menu" hidden>
   <!-- The main menu: our soldier in smoke on the right; the side bar on the left (who you are, Deploy, the sections); a
        section's panel slides in over the picture, and with none open your orders and the day's drop are there instead -->
-  <div class="mm-bg" aria-hidden="true"><div class="mm-smoke" id="mmSmokeA"></div><img class="mm-hero" src="art/hero.webp" alt="" decoding="async"><div class="mm-smoke b" id="mmSmokeB"></div><div class="mm-grade"></div></div>
+  <div class="mm-bg" aria-hidden="true"><div class="mm-smoke" id="mmSmokeA"></div><img class="mm-hero" src="art/hero.webp?v=fb65344027" alt="" decoding="async"><div class="mm-smoke b" id="mmSmokeB"></div><div class="mm-grade"></div></div>
   <aside class="mm-side">
     <p class="mm-title">Main menu</p>
     <div class="mm-player">
