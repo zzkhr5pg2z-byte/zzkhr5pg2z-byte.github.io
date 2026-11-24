@@ -363,8 +363,16 @@ kbd { font-family: var(--mono); font-size: 11px; color: var(--fg); background: v
 #menu[hidden] { display: none; }
 .mm-bg { position: absolute; inset: 0; overflow: hidden; background: radial-gradient(ellipse at 68% 32%, #3d3e3b 0%, #222423 52%, #141515 100%); }
 .mm-hero { position: absolute; right: 0; bottom: -16vh; height: 112vh; width: auto; max-width: none; filter: grayscale(.5) contrast(1.12) brightness(.92); }
+/* searchlights: beams from the ground behind the soldier sweeping slowly back and forth across the smoky sky, each
+   narrow at its lamp and spreading as it climbs, fading out high up; screen-blended so they light the smoke */
+.mm-beams { position: absolute; inset: 0; overflow: hidden; pointer-events: none; mix-blend-mode: screen; }
+.mm-beams i { position: absolute; left: var(--x); bottom: -6vh; width: 40vh; height: 150vh; margin-left: -20vh; transform-origin: 50% 100%; transform: rotate(var(--a0));
+  filter: blur(7px); opacity: 1; animation: mmBeam var(--t, 18s) ease-in-out var(--d, 0s) infinite alternate; }
+.mm-beams b { position: absolute; inset: 0; clip-path: polygon(48% 100%, 52% 100%, 100% 0, 0 0);
+  background: linear-gradient(0deg, rgba(220,232,255,.95) 0%, rgba(206,222,255,.42) 12%, rgba(194,212,250,.2) 45%, rgba(190,210,250,0) 88%); }
+@keyframes mmBeam { from { transform: rotate(var(--a0)); } to { transform: rotate(var(--a1)); } }
 .mm-smoke { position: absolute; inset: -12%; background-size: 100% 100%; opacity: .5; mix-blend-mode: screen; animation: mmDrift 70s ease-in-out infinite alternate; pointer-events: none; }
-.mm-smoke.b { opacity: .42; animation-duration: 95s; animation-direction: alternate-reverse; }
+.mm-smoke.b { opacity: .42; animation-duration: 95s; animation-direction: alternate-reverse; -webkit-mask-image: linear-gradient(0deg, #000 0%, rgba(0,0,0,.35) 22%, transparent 42%); mask-image: linear-gradient(0deg, #000 0%, rgba(0,0,0,.35) 22%, transparent 42%); } /* (the smoke in front of the soldier only round his legs: over him it lit up his shadows) */
 .mm-grade { position: absolute; inset: 0; background: linear-gradient(205deg, rgba(240,150,60,.62) 0%, rgba(240,150,60,.12) 34%, rgba(0,0,0,0) 52%, rgba(64,150,214,.18) 74%, rgba(64,150,214,.62) 100%); mix-blend-mode: overlay; }
 @keyframes mmDrift { from { transform: translate(-3%, 1%) scale(1.04); } to { transform: translate(3%, -2%) scale(1.12); } }
 .mm-side { position: absolute; left: 0; top: 0; bottom: 0; z-index: 2; width: min(440px, 38vw); box-sizing: border-box; display: flex; flex-direction: column; gap: 12px; padding: max(16px, env(safe-area-inset-top, 0px)) 24px max(16px, env(safe-area-inset-bottom, 0px)) max(22px, env(safe-area-inset-left, 0px)); background: linear-gradient(180deg, rgba(64,66,63,.93) 0%, rgba(44,47,48,.9) 55%, rgba(36,58,74,.88) 100%); border-right: 1px solid rgba(236,232,218,.32); overflow-y: auto; scrollbar-width: none; }
@@ -408,7 +416,7 @@ kbd { font-family: var(--mono); font-size: 11px; color: var(--fg); background: v
 .mm-close { position: absolute; top: max(14px, env(safe-area-inset-top, 0px)); right: max(16px, env(safe-area-inset-right, 0px)); width: 40px; height: 40px; font-size: 18px; color: var(--fg); background: rgba(236,232,218,.06); border: 1px solid var(--line); cursor: pointer; }
 .mm-close:hover, .mm-close:focus-visible { background: rgba(236,232,218,.14); outline: none; }
 @keyframes mmIn { from { opacity: 0; transform: translateX(28px); } }
-@media (prefers-reduced-motion: reduce) { .mm-smoke, .mm-panel { animation: none; } }
+@media (prefers-reduced-motion: reduce) { .mm-smoke, .mm-panel, .mm-beams i { animation: none; } }
 /* (a phone, or any narrow screen: the side bar runs across the top, the picture behind it, a panel over the lot) */
 @media (max-width: 760px) {
   .mm-side { width: 100%; right: 0; border-right: 0; background: linear-gradient(180deg, rgba(34,36,35,.94) 0%, rgba(34,36,35,.7) 100%); }
@@ -671,7 +679,7 @@ body.touch .desk-only, body:not(.touch) .touch-only { display: none !important; 
 <!-- Loading, two ways: opening the game, its title (our soldier, the name); loading a map (changing maps, or arriving by
      invite), that map's briefing (its picture, name, place, mode, objective). The bar, its megabytes and the tips in both. -->
 <div id="loading" class="is-title">
-  <div class="ld-hero" aria-hidden="true"><div class="ld-haze"></div><img class="mm-hero" alt="" src="art/hero.webp?v=9d6e394a7b" decoding="async"><div class="mm-grade"></div></div>
+  <div class="ld-hero" aria-hidden="true"><div class="mm-beams"><i style="--x:58%;--a0:-34deg;--a1:-6deg;--t:17s"><b></b></i><i style="--x:80%;--a0:22deg;--a1:-14deg;--t:23s;--d:-9s"><b></b></i><i style="--x:97%;--a0:-8deg;--a1:-38deg;--t:19s;--d:-5s"><b></b></i></div><div class="ld-haze"></div><img class="mm-hero" alt="" src="art/hero.webp?v=e8e221d970" decoding="async"><div class="mm-grade"></div></div>
   <img class="ld-art" id="ldArt" alt="" src="art/base.jpg?v=68930a9e1c" decoding="async">
   <div class="ld-shade"></div><div class="ld-grid" aria-hidden="true"></div><div class="ld-scan" aria-hidden="true"></div>
   <div class="load-in">
@@ -794,7 +802,7 @@ body.touch .desk-only, body:not(.touch) .touch-only { display: none !important; 
 <section class="overlay" id="menu" hidden>
   <!-- The main menu: our soldier in smoke on the right; the side bar on the left (who you are, Deploy, the sections); a
        section's panel slides in over the picture, and with none open your orders and the day's drop are there instead -->
-  <div class="mm-bg" aria-hidden="true"><div class="mm-smoke" id="mmSmokeA"></div><img class="mm-hero" src="art/hero.webp?v=9d6e394a7b" alt="" decoding="async"><div class="mm-smoke b" id="mmSmokeB"></div><div class="mm-grade"></div></div>
+  <div class="mm-bg" aria-hidden="true"><div class="mm-beams"><i style="--x:58%;--a0:-34deg;--a1:-6deg;--t:17s"><b></b></i><i style="--x:80%;--a0:22deg;--a1:-14deg;--t:23s;--d:-9s"><b></b></i><i style="--x:97%;--a0:-8deg;--a1:-38deg;--t:19s;--d:-5s"><b></b></i></div><div class="mm-smoke" id="mmSmokeA"></div><img class="mm-hero" src="art/hero.webp?v=e8e221d970" alt="" decoding="async"><div class="mm-smoke b" id="mmSmokeB"></div><div class="mm-grade"></div></div>
   <aside class="mm-side">
     <p class="mm-title">Main menu</p>
     <div class="mm-player">
@@ -1086,7 +1094,7 @@ body.touch .desk-only, body:not(.touch) .touch-only { display: none !important; 
 </section>
 
 <div id="adCover" hidden><div><b>Advertisement</b><span>The game carries on after this.</span></div></div>
-<script>window.__builtAssets = true;</script><script src="game.js?v=7056307885"></script>
+<script>window.__builtAssets = true;</script><script src="game.js?v=ed2b63cb97"></script>
 
 </body>
 </html>
