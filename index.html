@@ -134,6 +134,39 @@ input[type=text], input:not([type]), textarea { -webkit-user-select: text; user-
 #hitmark.crit::before, #hitmark.crit::after { background: var(--amber); }
 #hitmark.kill::before, #hitmark.kill::after { background: var(--danger); width: 4px; }
 #hitmark.kill::after { height: 4px; width: 32px; }
+/* fortify: supplies under the score; the build bar at the bottom middle (on a phone, under the compass) */
+#supKey { font: 600 11px/1 var(--mono); color: var(--muted); margin-left: 8px; letter-spacing: .06em; }
+#bbSup { font-style: normal; color: var(--amber); letter-spacing: .04em; text-transform: none; }
+body.touch #supBox { display: none !important; } /* (a phone's corner has no room: the build bar shows the supplies) */
+#buildBar { position: absolute; left: 50%; bottom: calc(108px + env(safe-area-inset-bottom, 0px)); transform: translateX(-50%); display: grid; gap: 6px; padding: 8px 10px 9px; background: rgba(14,16,13,.84); border: 1px solid var(--line); border-top: 3px solid var(--amber); pointer-events: auto; max-width: calc(100vw - 24px); }
+.bb-top { display: flex; align-items: baseline; gap: 10px; font: 600 11px/1 var(--mono); letter-spacing: .12em; text-transform: uppercase; }
+.bb-top b { color: var(--amber); font-weight: 600; }
+.bb-top span { color: var(--fg); letter-spacing: .04em; text-transform: none; flex: 1; }
+#bbClose { background: none; border: 0; color: var(--muted); font-size: 14px; cursor: pointer; padding: 0 2px; }
+.bb-row { display: flex; gap: 6px; }
+.bb-card { display: grid; grid-template-columns: auto 1fr; grid-template-rows: auto auto; gap: 1px 6px; align-items: baseline; min-width: 112px; padding: 6px 8px; background: rgba(255,255,255,.04); border: 1px solid var(--line); color: var(--fg); text-align: left; cursor: pointer; font: inherit; }
+.bb-card kbd { grid-row: span 2; font: 600 11px/1 var(--mono); color: var(--muted); border: 1px solid var(--line); padding: 2px 5px; }
+.bb-card b { font: 600 12px/1.2 var(--body); }
+.bb-card span { font: 600 11px/1 var(--mono); color: var(--amber); }
+.bb-card span::after { content: " supplies"; color: var(--muted); font-weight: 500; }
+.bb-card i { grid-column: 2; font: 500 10px/1 var(--mono); font-style: normal; color: var(--muted); justify-self: end; margin-top: -11px; }
+.bb-card.on { border-color: var(--amber); background: rgba(240,168,48,.14); }
+.bb-card.off { opacity: .45; }
+.bb-card.deal { border-color: #58e07a; } .bb-card.deal span { color: #58e07a; } .bb-card.deal span::after { content: " · half price"; color: #58e07a; }
+.bb-help { font: 500 11px/1.2 var(--mono); color: var(--muted); }
+body.touch #buildBar { bottom: auto; top: calc(100px + env(safe-area-inset-top, 0px)); } /* (under the compass and the health the phone puts up the middle) */
+body.touch #cmdClock { top: calc(100px + env(safe-area-inset-top, 0px)); }
+body.touch .bb-card { min-width: 0; padding: 5px 6px; }
+body.touch .bb-card span::after { content: ""; }
+@media (max-width: 700px) { .bb-row { flex-wrap: wrap; } .bb-card { min-width: 0; flex: 1 1 30%; } }
+/* Robot Commander: the commander's orders at the bottom; the defenders' clock at the top */
+#cmdBar { position: absolute; left: 50%; bottom: calc(18px + env(safe-area-inset-bottom, 0px)); transform: translateX(-50%); display: grid; gap: 6px; padding: 8px 10px 9px; background: rgba(14,16,13,.86); border: 1px solid var(--line); border-top: 3px solid #ff7a3d; pointer-events: auto; max-width: calc(100vw - 24px); }
+#cmdBar .bb-top b { color: #ff9a6a; }
+#cmdRow .bb-card span::after { content: " points"; }
+.cmd-meter { height: 5px; background: var(--night); border: 1px solid var(--line); } .cmd-meter i { display: block; height: 100%; width: 0; background: #ff9a6a; }
+#cmdClock { position: absolute; left: 50%; top: calc(64px + env(safe-area-inset-top, 0px)); transform: translateX(-50%); font: 600 13px/1 var(--mono); letter-spacing: .1em; text-transform: uppercase; color: var(--amber); background: rgba(0,0,0,.45); padding: 6px 10px; }
+body.cmdr #cross, body.cmdr #hitmark, body.cmdr .corner.br, body.cmdr #items, body.cmdr #streakBox, body.cmdr #compass, body.cmdr .corner.bl, body.cmdr #keysHint, body.cmdr #prompt, body.cmdr #dmgdir { display: none !important; }
+body.cmdr #cmdBar ~ * { cursor: default; }
 /* medals: a word for a kill worth remarking on, under the crosshair */
 #medal { position: absolute; left: 50%; top: calc(50% + 58px); transform: translateX(-50%); display: grid; justify-items: center; gap: 2px; pointer-events: none; animation: medalIn .28s cubic-bezier(.2,1.6,.4,1); }
 #medal b { font: 400 26px/1 var(--display); letter-spacing: .04em; color: var(--amber); text-shadow: 0 2px 0 rgba(0,0,0,.6), 0 0 18px rgba(240,168,48,.35); text-transform: uppercase; }
@@ -736,6 +769,7 @@ body.touch .desk-only, body:not(.touch) .touch-only { display: none !important; 
 <div id="hud" hidden>
   <div class="corner tl"><div class="label">Wave</div><div class="big" id="waveNum">1</div><div class="small" id="left">0 robots left</div><div class="small obj" id="objLine" hidden></div>
     <div class="label" style="margin-top:8px">Score</div><div class="big" id="score">0</div>
+    <div id="supBox" hidden><div class="label" style="margin-top:8px">Supplies</div><div class="row"><span class="big" id="supNum">0</span><span id="supKey"></span></div></div>
     <div id="mateBox" hidden></div>
     <div id="streakBox"><div class="label" style="margin-top:8px">Streak</div><div class="row"><span class="big" id="streakNum">0</span><span id="streakNext"></span></div><div id="streakPips"></div></div></div>
   <div class="corner tr"><canvas id="minimap" width="170" height="170" aria-label="Minimap"></canvas></div>
@@ -749,6 +783,9 @@ body.touch .desk-only, body:not(.touch) .touch-only { display: none !important; 
   <div class="small" id="lockHint" hidden>Click to lock the mouse, or drag to aim</div>
   <div id="cross"><i></i><i></i><i></i><i></i><b></b></div>
   <div id="hitmark"></div>
+  <div id="cmdBar" hidden><div class="bb-top"><b>Robot Commander</b><span id="cmdTime"></span><span id="cmdCp"></span></div><div class="cmd-meter"><i id="cmdFill"></i></div><div class="bb-row" id="cmdRow"></div><div class="bb-help">WASD to look round the base · pick an order (1-6), then click the map</div></div>
+  <div id="cmdClock" hidden></div>
+  <div id="buildBar" hidden><div class="bb-top"><b>Fortify</b><em id="bbSup"></em><span id="bbWhy"></span><button type="button" id="bbClose" aria-label="Stop building">✕</button></div><div class="bb-row" id="bbRow"></div><div class="bb-help" id="bbHelp"></div></div>
   <div id="medal" hidden><b id="medalT"></b><span id="medalS"></span></div>
   <div id="deathCard" hidden><span class="dc-k">Killed by</span><b id="dcName"></b><span id="dcGun"></span><span id="dcInfo"></span><div class="dc-bar"><i id="dcFill"></i></div><span id="dcNext"></span></div>
   <div id="dmgdir"></div>
@@ -823,6 +860,7 @@ body.touch .desk-only, body:not(.touch) .touch-only { display: none !important; 
       <p class="small" id="rcNext"></p>
       <p class="small" id="rcMile"></p>
       <p class="small mm-daily" id="rcDaily" hidden>Your daily supply drop is waiting · <button type="button" class="linkbtn" id="rcShop">Open the armoury</button></p>
+      <p class="small mm-daily" id="rcFob" hidden>Your FOB on this map: <span id="rcFobN"></span> still standing · <button type="button" class="linkbtn" id="rcFobClear">Clear the base</button></p>
     </div>
   </div>
   <div class="mm-panel" id="mmPanel" hidden><button type="button" class="mm-close" id="mmClose" aria-label="Close">✕</button><div class="mm-panel-in">
@@ -854,6 +892,7 @@ body.touch .desk-only, body:not(.touch) .touch-only { display: none !important; 
       <p class="lede" style="font-size:14px">Up to <b>ten players</b>. One of you hosts and shares the four-letter code; the others join with it. <b>Co-op</b>: all of you against the robot waves. <b>PvP</b>: everyone starts in the hub, where the host picks the mode (Gun Game, Duel rounds, Scavenger, King of the Hill, Team Deathmatch) at the match terminal.</p>
       <div class="row2"><label class="sens" for="callsign"><span id="callsignLbl">Callsign</span> <input class="field" id="callsign" maxlength="20" autocomplete="off" spellcheck="false"></label></div>
       <div class="row2"><button class="btn2" id="hostDuel" type="button" disabled>Host PvP</button><button class="btn2" id="hostCoop" type="button" disabled>Host co-op</button></div>
+      <div class="row2"><button class="btn2" id="hostCmd" type="button" disabled title="You command the robots from above; your friends defend the base">Host Robot Commander</button></div>
       <div id="gameList"></div>
       <div class="row2"><input class="field code" id="joinCode" maxlength="4" placeholder="CODE" autocomplete="off" spellcheck="false" aria-label="Match code"><button class="btn2" id="joinBtn" type="button" disabled>Join</button></div>
       <p class="note" id="netNote">Connecting…</p>
@@ -1094,7 +1133,7 @@ body.touch .desk-only, body:not(.touch) .touch-only { display: none !important; 
 </section>
 
 <div id="adCover" hidden><div><b>Advertisement</b><span>The game carries on after this.</span></div></div>
-<script>window.__builtAssets = true;</script><script src="game.js?v=ed2b63cb97"></script>
+<script>window.__builtAssets = true;</script><script src="game.js?v=e12a62fb43"></script>
 
 </body>
 </html>
