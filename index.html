@@ -124,13 +124,45 @@ input[type=text], input:not([type]), textarea { -webkit-user-select: text; user-
 #cross i:nth-child(3) { height: 2px; width: 9px; top: -1px; right: var(--gap); }
 #cross i:nth-child(4) { height: 2px; width: 9px; top: -1px; left: var(--gap); }
 #cross b { position: absolute; left: -1px; top: -1px; width: 2px; height: 2px; background: var(--fg); }
-#hitmark { position: absolute; left: 50%; top: 50%; width: 26px; height: 26px; margin: -13px 0 0 -13px; opacity: 0; transform: rotate(45deg); }
+#hitmark { position: absolute; left: 50%; top: 50%; width: 32px; height: 32px; margin: -16px 0 0 -16px; opacity: 0; transform: rotate(45deg); filter: drop-shadow(0 0 2px rgba(0,0,0,.9)); }
 #hitmark::before, #hitmark::after { content: ""; position: absolute; background: var(--fg); }
-#hitmark::before { left: 12px; top: 0; width: 2px; height: 26px; }
-#hitmark::after { top: 12px; left: 0; height: 2px; width: 26px; }
+#hitmark::before { left: 14.5px; top: 0; width: 3px; height: 32px; }
+#hitmark::after { top: 14.5px; left: 0; height: 3px; width: 32px; }
+/* a hit: the crosshair flashes red and opens a touch; a kill, thicker (see hud() in main.js) */
+#cross.hit { --gap: 8px; } #cross.hit i { background: var(--danger); }
+#cross.killhit { --gap: 10px; } #cross.killhit i { background: var(--danger); box-shadow: 0 0 6px rgba(255,74,61,.8); }
 #hitmark.crit::before, #hitmark.crit::after { background: var(--amber); }
-#hitmark.kill::before, #hitmark.kill::after { background: var(--danger); width: 3px; }
-#hitmark.kill::after { height: 3px; width: 26px; }
+#hitmark.kill::before, #hitmark.kill::after { background: var(--danger); width: 4px; }
+#hitmark.kill::after { height: 4px; width: 32px; }
+/* medals: a word for a kill worth remarking on, under the crosshair */
+#medal { position: absolute; left: 50%; top: calc(50% + 58px); transform: translateX(-50%); display: grid; justify-items: center; gap: 2px; pointer-events: none; animation: medalIn .28s cubic-bezier(.2,1.6,.4,1); }
+#medal b { font: 400 26px/1 var(--display); letter-spacing: .04em; color: var(--amber); text-shadow: 0 2px 0 rgba(0,0,0,.6), 0 0 18px rgba(240,168,48,.35); text-transform: uppercase; }
+#medal span { font: 600 11px/1 var(--mono); letter-spacing: .14em; color: var(--fg); text-transform: uppercase; text-shadow: 0 1px 2px #000; }
+#medal.big b { font-size: 32px; color: #ffd27a; }
+@keyframes medalIn { from { transform: translateX(-50%) scale(1.6); opacity: 0; } to { transform: translateX(-50%) scale(1); opacity: 1; } }
+/* the PvP kill feed: killer, gun, the one killed */
+.feed-item.kl { border-color: var(--line); color: var(--muted); display: flex; gap: 7px; align-items: baseline; }
+.feed-item.kl b { color: var(--fg); font-weight: 600; }
+.feed-item.kl em { font-style: normal; font-size: 10px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); border: 1px solid var(--line); padding: 0 4px; }
+.feed-item.kl.mine { border-color: var(--amber); background: rgba(60,44,14,.72); }
+.feed-item.kl.died { border-color: #8fb4e6; }
+.feed-item.kl b.you { color: var(--amber); }
+/* the death card: who got you, with what, from how far, and how long till you're back */
+#deathCard { position: absolute; left: 50%; top: 38%; transform: translateX(-50%); min-width: 240px; padding: 12px 18px 14px; display: grid; justify-items: center; gap: 3px; background: rgba(14,16,13,.82); border: 1px solid var(--line); border-top: 3px solid #8fb4e6; pointer-events: none; animation: dcIn .25s ease-out; }
+@keyframes dcIn { from { opacity: 0; transform: translate(-50%, 10px); } to { opacity: 1; transform: translate(-50%, 0); } }
+#deathCard .dc-k { font: 600 10px/1 var(--mono); letter-spacing: .18em; text-transform: uppercase; color: var(--muted); }
+#deathCard b { font: 400 28px/1.05 var(--display); color: var(--fg); }
+#dcGun { font: 600 12px/1.2 var(--mono); color: var(--amber); text-transform: uppercase; letter-spacing: .08em; }
+#dcInfo, #dcNext { font: 500 12px/1.3 var(--mono); color: var(--muted); }
+#deathCard .dc-bar { width: 100%; height: 3px; background: var(--night); margin-top: 6px; }
+#deathCard .dc-bar i { display: block; height: 100%; width: 0; background: #8fb4e6; }
+/* health bars over robots you've hit and over the other players */
+.hbar { position: absolute; left: 0; top: 0; width: 46px; margin-left: -23px; pointer-events: none; display: grid; justify-items: center; gap: 2px; }
+.hbar span { font: 600 11px/1 var(--body); color: var(--fg); text-shadow: 0 1px 2px #000; white-space: nowrap; }
+.hbar s { display: block; width: 100%; height: 4px; background: rgba(0,0,0,.6); border: 1px solid rgba(0,0,0,.7); text-decoration: none; }
+.hbar s i { display: block; height: 100%; background: var(--hull); }
+.hbar.foe s i { background: #f0a830; }
+.hbar.low s i { background: #ff7a3d; }
 .dnum { position: absolute; left: 0; top: 0; margin: -10px 0 0 -14px; font: 700 15px/1 var(--mono); color: #f2ede0; text-shadow: 0 1px 2px rgba(0,0,0,.9); pointer-events: none; }
 .dnum.crit { color: var(--amber); font-size: 17px; }
 .dnum.kill { color: var(--danger); font-size: 19px; }
@@ -486,6 +518,18 @@ body.intro #hud, body.intro #touch .tbtn, body.intro #stick { opacity: 0; transi
 #adCover.on { background: #0b0c0a; }
 #adCover.on > div { display: grid; gap: 6px; }
 #adCover b { font-family: var(--display); font-weight: 400; font-size: 28px; color: var(--amber); }
+/* the end screen's lineup: the side that won, names under them */
+.crew { position: relative; height: clamp(120px, 30vh, 250px); margin: -8px calc(-1 * clamp(18px, 5vw, 32px)) -4px; overflow: hidden;
+  background: radial-gradient(ellipse 60% 85% at 50% 78%, rgba(255,190,110,.16), transparent 70%), linear-gradient(180deg, transparent 55%, rgba(0,0,0,.35)); }
+.crew.lost { background: radial-gradient(ellipse 60% 85% at 50% 78%, rgba(120,160,220,.14), transparent 70%), linear-gradient(180deg, transparent 55%, rgba(0,0,0,.4)); }
+.crew canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.crew-tag { position: absolute; left: clamp(18px, 5vw, 32px); top: 8px; font: 600 11px/1 var(--mono); letter-spacing: .16em; text-transform: uppercase; color: var(--amber); background: rgba(0,0,0,.45); padding: 5px 9px; border-radius: 2px; white-space: nowrap; }
+.crew.lost .crew-tag { color: #bcd3f2; }
+.crew-names { position: absolute; inset: auto 0 6px 0; height: 34px; pointer-events: none; }
+.crew-names span { position: absolute; bottom: 0; transform: translateX(-50%); text-align: center; font: 600 12px/1.15 var(--body); color: var(--fg); text-shadow: 0 1px 3px #000; white-space: nowrap; max-width: 30%; overflow: hidden; text-overflow: ellipsis; }
+.crew-names span small { display: block; font: 500 10px/1.2 var(--mono); color: var(--muted); letter-spacing: .06em; }
+.crew-names span.you { color: var(--amber); }
+.crew-names i { display: inline-block; width: 7px; height: 7px; border-radius: 50%; margin-right: 5px; vertical-align: 1px; }
 .history { margin-top: 12px; }
 .history summary { cursor: pointer; width: max-content; }
 .history table { width: 100%; border-collapse: collapse; font-family: var(--mono); font-size: 12px; margin-top: 8px; }
@@ -697,6 +741,8 @@ body.touch .desk-only, body:not(.touch) .touch-only { display: none !important; 
   <div class="small" id="lockHint" hidden>Click to lock the mouse, or drag to aim</div>
   <div id="cross"><i></i><i></i><i></i><i></i><b></b></div>
   <div id="hitmark"></div>
+  <div id="medal" hidden><b id="medalT"></b><span id="medalS"></span></div>
+  <div id="deathCard" hidden><span class="dc-k">Killed by</span><b id="dcName"></b><span id="dcGun"></span><span id="dcInfo"></span><div class="dc-bar"><i id="dcFill"></i></div><span id="dcNext"></span></div>
   <div id="dmgdir"></div>
   <div id="prompt" hidden></div>
   <div id="cook" hidden><b id="cookNum">2.4</b><span>cooking</span></div>
@@ -853,6 +899,7 @@ body.touch .desk-only, body:not(.touch) .touch-only { display: none !important; 
       <details class="keys desk-only"><summary class="sens">Key bindings</summary><p class="small">Click an action, then press its new key (<kbd>Esc</kbd> to cancel). A key already in use swaps over. The arrow keys always move; <kbd>Esc</kbd>, <kbd>P</kbd>, <kbd>Tab</kbd> and the number keys stay as they are.</p><div id="keyList"></div><button class="btn2" id="keyReset" type="button">Reset keys</button> <span class="small" id="keyNote" role="status"></span></details>
       <h3 class="grp">Sound and screen</h3>
       <label class="sens" for="vol">Volume <input id="vol" type="range" min="0" max="1" step="0.05" value="1"><span id="volVal">100%</span></label>
+      <label class="sens" for="muteSet">Mute all sound (M) <input id="muteSet" type="checkbox" style="width:auto"></label>
       <label class="sens" for="crossCol">Crosshair <select id="crossCol"><option value="">White</option><option value="#3dff6e">Green</option><option value="#ffe14a">Yellow</option><option value="#3de8ff">Cyan</option><option value="#ff5ad9">Pink</option></select></label>
       <label class="sens" for="calm">Less camera shake <input id="calm" type="checkbox" style="width:auto"></label>
     </div></div>
@@ -1012,7 +1059,7 @@ body.touch .desk-only, body:not(.touch) .touch-only { display: none !important; 
   <div class="card"><div class="card-in">
     <h2>Paused</h2>
     <p class="lede">The robots will wait.</p>
-    <div class="actions"><button class="btn" id="resumeBtn" type="button">Resume</button><button class="btn2" id="leaveBtn" type="button" hidden>Leave match</button><button class="btn2" id="inviteBtn" type="button" hidden>Copy invite link</button><span class="note">M toggles sound</span></div>
+    <div class="actions"><button class="btn" id="resumeBtn" type="button">Click to resume</button><button class="btn2" id="leaveBtn" type="button" hidden>Leave match</button><button class="btn2" id="inviteBtn" type="button" hidden>Copy invite link</button><span class="note">M toggles sound</span></div>
     <div class="rw" id="rwBox" hidden><button class="btn2" id="rwBtn" type="button"><span aria-hidden="true">&#9654;</span> Watch an ad: +1 medkit</button><span class="note" id="rwNote"></span></div>
     <div class="pfriends" id="pauseFriends" hidden></div>
     <div id="pauseOpts"></div>
@@ -1023,6 +1070,7 @@ body.touch .desk-only, body:not(.touch) .touch-only { display: none !important; 
 <section class="overlay" id="over" hidden>
   <div class="card"><div class="card-in">
     <h2 id="overTitle">Base <em>lost</em></h2>
+    <div class="crew" id="crew" hidden><canvas id="crewView" aria-hidden="true"></canvas><span class="crew-tag" id="crewTag"></span><div class="crew-names" id="crewNames"></div></div>
     <div class="stats">
       <div><span class="label" id="oL1">Score</span><span class="big" id="oScore">0</span></div>
       <div><span class="label" id="oL2">Wave</span><span class="big" id="oWave">1</span></div>
@@ -1038,7 +1086,7 @@ body.touch .desk-only, body:not(.touch) .touch-only { display: none !important; 
 </section>
 
 <div id="adCover" hidden><div><b>Advertisement</b><span>The game carries on after this.</span></div></div>
-<script>window.__builtAssets = true;</script><script src="game.js?v=c0413435ee"></script>
+<script>window.__builtAssets = true;</script><script src="game.js?v=7454003221"></script>
 
 </body>
 </html>
