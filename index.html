@@ -68,6 +68,16 @@ input[type=text], input:not([type]), textarea { -webkit-user-select: text; user-
 #loadLabel, #loadPct { font-family: var(--mono); font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
 #loadPct { color: var(--fg); }
 @media (prefers-reduced-motion: reduce) { .ld-art, .ld-scan, .ld-blink { animation: none; } .ld-scan { display: none; } }
+/* the title way: our soldier in a haze, graded as the menu; the name big over the bar */
+.ld-hero { position: absolute; inset: 0; overflow: hidden; background: radial-gradient(ellipse at 68% 32%, #3d3e3b 0%, #222423 52%, #141515 100%); }
+.ld-haze { position: absolute; inset: -10%; background: radial-gradient(ellipse 40% 30% at 30% 70%, rgba(200,200,200,.12), transparent 70%), radial-gradient(ellipse 50% 35% at 75% 30%, rgba(220,210,190,.14), transparent 70%), radial-gradient(ellipse 30% 25% at 55% 85%, rgba(180,190,200,.1), transparent 70%); animation: mmDrift 40s ease-in-out infinite alternate; }
+.ld-logo { font-family: var(--display); font-size: clamp(52px, 9vw, 104px); line-height: .86; letter-spacing: .01em; text-shadow: 0 2px 24px rgba(0,0,0,.5); }
+.ld-logo em { display: block; font-style: normal; color: var(--amber); font-size: .56em; letter-spacing: .08em; }
+#loading.is-title .ld-art, #loading.is-title .ld-brief, #loading.is-title .ld-grid { display: none; }
+#loading.is-title .ld-shade { background: linear-gradient(90deg, rgba(14,16,13,.86) 0%, rgba(14,16,13,.4) 40%, rgba(14,16,13,0) 62%), linear-gradient(0deg, rgba(14,16,13,.8) 0%, rgba(14,16,13,0) 42%); }
+#loading.is-brief .ld-hero, #loading.is-brief .ld-logo { display: none; }
+@media (max-height: 500px) { .ld-logo { font-size: 46px; } }
+@media (max-width: 600px) { #loading.is-title .mm-hero { right: -30vw; opacity: .7; } }
 /* (a phone on its side: the briefing small enough to leave the picture showing) */
 @media (max-height: 500px) { .load-in { width: min(460px, 100%); gap: 5px; } .load-in h1 { font-size: 40px; } .ld-meta dd { font-size: 12px; } .ld-meta dt, .ld-line b { font-size: 9px; } .ld-line { font-size: 12px; grid-template-columns: 74px 1fr; } .ld-tip { min-height: 0; } #loadLabel, #loadPct { font-size: 10px; } }
 @media (max-width: 600px) { .ld-line { grid-template-columns: 74px 1fr; font-size: 13px; } .ld-shade { background: linear-gradient(0deg, rgba(14,16,13,.96) 0%, rgba(14,16,13,.7) 55%, rgba(14,16,13,.2) 100%); } }
@@ -314,6 +324,70 @@ kbd { font-family: var(--mono); font-size: 11px; color: var(--fg); background: v
 .quick h2 { font-size: 26px; }
 .quick .row2 { display: flex; gap: 10px; flex-wrap: wrap; }
 .card.ask { max-width: 640px; }
+/* ---- The main menu. Our soldier in smoke, graded warm from the top right and cool from the bottom left; the side bar
+   on the left in big slanted type, the chosen section boxed with a line running in to it; a section's panel slides in
+   over the picture. Nothing behind it is drawn while it's up (main.js): it costs nothing to sit on. */
+#menu { display: block; padding: 0; overflow: hidden; background: #18191a; -webkit-backdrop-filter: none; backdrop-filter: none; }
+#menu[hidden] { display: none; }
+.mm-bg { position: absolute; inset: 0; overflow: hidden; background: radial-gradient(ellipse at 68% 32%, #3d3e3b 0%, #222423 52%, #141515 100%); }
+.mm-hero { position: absolute; right: 0; bottom: -16vh; height: 112vh; width: auto; max-width: none; filter: grayscale(.5) contrast(1.12) brightness(.92); }
+.mm-smoke { position: absolute; inset: -12%; background-size: 100% 100%; opacity: .5; mix-blend-mode: screen; animation: mmDrift 70s ease-in-out infinite alternate; pointer-events: none; }
+.mm-smoke.b { opacity: .42; animation-duration: 95s; animation-direction: alternate-reverse; }
+.mm-grade { position: absolute; inset: 0; background: linear-gradient(205deg, rgba(240,150,60,.62) 0%, rgba(240,150,60,.12) 34%, rgba(0,0,0,0) 52%, rgba(64,150,214,.18) 74%, rgba(64,150,214,.62) 100%); mix-blend-mode: overlay; }
+@keyframes mmDrift { from { transform: translate(-3%, 1%) scale(1.04); } to { transform: translate(3%, -2%) scale(1.12); } }
+.mm-side { position: absolute; left: 0; top: 0; bottom: 0; z-index: 2; width: min(440px, 38vw); box-sizing: border-box; display: flex; flex-direction: column; gap: 12px; padding: max(16px, env(safe-area-inset-top, 0px)) 24px max(16px, env(safe-area-inset-bottom, 0px)) max(22px, env(safe-area-inset-left, 0px)); background: linear-gradient(180deg, rgba(64,66,63,.93) 0%, rgba(44,47,48,.9) 55%, rgba(36,58,74,.88) 100%); border-right: 1px solid rgba(236,232,218,.32); overflow-y: auto; scrollbar-width: none; }
+.mm-side::-webkit-scrollbar { display: none; }
+.mm-title { align-self: flex-end; margin: 0; padding-bottom: 2px; font: italic 600 26px var(--body); letter-spacing: .02em; text-transform: uppercase; border-bottom: 2px solid var(--fg); }
+.mm-player { display: grid; grid-template-columns: 52px 1fr; gap: 12px; align-items: center; }
+.mm-player .badge { width: 52px; height: 58px; display: grid; place-items: center; font: 600 13px var(--mono); letter-spacing: .06em; text-transform: uppercase; color: #1a1406; background: linear-gradient(160deg, #ffc65a, var(--amber) 55%, #b57816); clip-path: polygon(50% 0, 100% 22%, 100% 78%, 50% 100%, 0 78%, 0 22%); }
+.mm-who { display: grid; gap: 4px; min-width: 0; }
+.mm-who b { font: italic 600 22px var(--body); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.mm-rank { display: flex; justify-content: space-between; gap: 8px; font: 600 10px var(--mono); letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+.mm-cr { display: inline-flex; align-items: center; gap: 6px; font: 600 13px var(--mono); color: var(--fg); }
+.coin { display: inline-block; width: 14px; height: 14px; border-radius: 50%; background: radial-gradient(circle at 35% 35%, #ffe08a, #e0a52a 55%, #8a5e12); box-shadow: 0 0 0 1px rgba(0,0,0,.4); }
+.mm-acts, .tabs.mm-nav { display: flex; flex-direction: column; align-items: flex-end; gap: 2px; }
+.mm-acts { margin-top: 8px; }
+.tabs.mm-nav { border: 0; margin: 0; overflow: visible; }
+.mm-go, .mm-item, .tabs.mm-nav button { position: relative; font: italic 600 clamp(19px, 2.3vw, 27px)/1.2 var(--body); letter-spacing: .03em; text-transform: uppercase; color: var(--fg); background: none; border: 0; padding: 5px 18px 5px 14px; text-align: right; cursor: pointer; }
+.tabs.mm-nav button { color: rgba(236,232,218,.86); }
+.mm-item::after, .tabs.mm-nav button::after { content: ""; position: absolute; inset: 3px 0 3px 0; border: 2px solid var(--fg); border-left: 0; transform: skewX(-14deg); opacity: 0; transition: opacity .15s; }
+.mm-item::before, .tabs.mm-nav button::before { content: ""; position: absolute; right: calc(100% - 2px); top: 3px; width: 160px; height: 2px; background: linear-gradient(90deg, rgba(236,232,218,0), var(--fg)); opacity: 0; transition: opacity .15s; }
+.tabs.mm-nav button[aria-selected="true"], .tabs.mm-nav button:hover, .tabs.mm-nav button:focus-visible, .mm-item:hover, .mm-item:focus-visible { color: var(--fg); outline: none; }
+.tabs.mm-nav button[aria-selected="true"]::after, .tabs.mm-nav button[aria-selected="true"]::before, .tabs.mm-nav button:hover::after, .tabs.mm-nav button:hover::before, .tabs.mm-nav button:focus-visible::after, .tabs.mm-nav button:focus-visible::before, .mm-item:hover::after, .mm-item:hover::before, .mm-item:focus-visible::after, .mm-item:focus-visible::before { opacity: 1; }
+.tabs.mm-nav button { border-bottom: 0; }
+.mm-go { font-size: clamp(26px, 3.2vw, 38px); color: #1a1406; padding: 6px 26px 6px 22px; margin-bottom: 4px; }
+.mm-go::before { content: ""; position: absolute; inset: 0; z-index: -1; background: var(--amber); transform: skewX(-14deg); box-shadow: 0 6px 24px rgba(240,168,48,.3); transition: filter .15s; }
+.mm-go:hover::before, .mm-go:focus-visible::before { filter: brightness(1.12); }
+.mm-go:focus-visible { outline: none; } .mm-go:focus-visible::before { box-shadow: 0 0 0 2px var(--fg), 0 6px 24px rgba(240,168,48,.3); }
+.mm-go:disabled, .mm-item:disabled { opacity: .45; cursor: default; }
+.mm-go { isolation: isolate; }
+.mm-best { align-self: flex-end; margin: 0; text-align: right; }
+.mm-logo { margin-top: auto; padding-top: 18px; font-family: var(--display); font-size: clamp(30px, 3.4vw, 44px); line-height: .9; letter-spacing: .01em; }
+.mm-logo em { display: block; font-style: normal; color: var(--amber); font-size: .62em; letter-spacing: .08em; }
+.mm-home { position: absolute; right: max(28px, env(safe-area-inset-right, 0px)); bottom: max(26px, env(safe-area-inset-bottom, 0px)); z-index: 1; width: min(400px, 36vw); }
+.mm-card { display: grid; gap: 8px; padding: 14px 16px; background: rgba(18,20,19,.78); border: 1px solid rgba(236,232,218,.2); border-left: 3px solid var(--amber); }
+.mm-h { display: flex; align-items: center; gap: 8px; margin: 0; font: 600 11px var(--mono); letter-spacing: .18em; text-transform: uppercase; color: var(--amber); }
+.mm-card .chal { margin: 0; }
+.mm-card .small { margin: 0; }
+.mm-panel { position: absolute; z-index: 3; top: 0; bottom: 0; right: 0; left: min(440px, 38vw); overflow-y: auto; overscroll-behavior: contain; padding: max(22px, env(safe-area-inset-top, 0px)) max(22px, env(safe-area-inset-right, 0px)) max(22px, env(safe-area-inset-bottom, 0px)) 28px; background: linear-gradient(90deg, rgba(16,18,17,.95) 0%, rgba(16,18,17,.88) 70%, rgba(16,18,17,.8) 100%); animation: mmIn .22s ease-out; }
+.mm-panel[hidden] { display: none; }
+.mm-panel-in { max-width: 760px; display: grid; gap: 16px; }
+.mm-panel .tab { min-height: 0; }
+.mm-close { position: absolute; top: max(14px, env(safe-area-inset-top, 0px)); right: max(16px, env(safe-area-inset-right, 0px)); width: 40px; height: 40px; font-size: 18px; color: var(--fg); background: rgba(236,232,218,.06); border: 1px solid var(--line); cursor: pointer; }
+.mm-close:hover, .mm-close:focus-visible { background: rgba(236,232,218,.14); outline: none; }
+@keyframes mmIn { from { opacity: 0; transform: translateX(28px); } }
+@media (prefers-reduced-motion: reduce) { .mm-smoke, .mm-panel { animation: none; } }
+/* (a phone, or any narrow screen: the side bar runs across the top, the picture behind it, a panel over the lot) */
+@media (max-width: 760px) {
+  .mm-side { width: 100%; right: 0; border-right: 0; background: linear-gradient(180deg, rgba(34,36,35,.94) 0%, rgba(34,36,35,.7) 100%); }
+  .mm-title, .mm-home, .mm-logo { display: none; }
+  .mm-acts, .tabs.mm-nav { align-items: stretch; }
+  .tabs.mm-nav { display: grid; grid-template-columns: 1fr 1fr; gap: 0 8px; }
+  .mm-go, .mm-item, .tabs.mm-nav button { text-align: left; font-size: 19px; }
+  .mm-go { font-size: 26px; }
+  .mm-panel { left: 0; }
+}
+@media (max-height: 520px) and (min-width: 761px) { .mm-side { gap: 6px; } .mm-player { display: none; } .mm-go, .mm-item, .tabs.mm-nav button { font-size: 17px; padding-block: 2px; } .mm-go { font-size: 24px; } .mm-logo { display: none; } .mm-home { display: none; } }
 .gfx { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; margin-top: 6px; }
 .gfx button { position: relative; display: grid; gap: 6px; align-content: start; text-align: left; padding: 16px 12px 14px; background: var(--night); color: var(--fg); border: 1px solid var(--line); border-radius: 3px; cursor: pointer; }
 .gfx button b { font-family: var(--display); font-weight: 400; font-size: 24px; line-height: 1; }
@@ -550,14 +624,18 @@ body.touch .desk-only, body:not(.touch) .touch-only { display: none !important; 
 
 <canvas id="view" aria-label="3D view of the base"></canvas>
 
-<div id="loading">
+<!-- Loading, two ways: opening the game, its title (our soldier, the name); loading a map (changing maps, or arriving by
+     invite), that map's briefing (its picture, name, place, mode, objective). The bar, its megabytes and the tips in both. -->
+<div id="loading" class="is-title">
+  <div class="ld-hero" aria-hidden="true"><div class="ld-haze"></div><img class="mm-hero" alt="" src="art/hero.webp" decoding="async"><div class="mm-grade"></div></div>
   <img class="ld-art" id="ldArt" alt="" src="art/base.jpg" decoding="async">
   <div class="ld-shade"></div><div class="ld-grid" aria-hidden="true"></div><div class="ld-scan" aria-hidden="true"></div>
   <div class="load-in">
-    <p class="eyebrow"><span class="ld-blink"></span>Iron Perimeter · Operation briefing</p>
-    <h1 id="ldMap">FOB <em>Kestrel</em></h1>
-    <dl class="ld-meta"><div><dt>Location</dt><dd id="ldLoc">Forward operating base, high desert</dd></div><div><dt>Mode</dt><dd id="ldMode">Wave defence</dd></div></dl>
-    <p class="ld-line"><b>Objective</b><span id="ldObj">Hold the base against wave after wave of robots.</span></p>
+    <div class="ld-logo" id="ldLogo">Iron <em>Perimeter</em></div>
+    <p class="eyebrow ld-brief"><span class="ld-blink"></span>Operation briefing</p>
+    <h1 class="ld-brief" id="ldMap">FOB <em>Kestrel</em></h1>
+    <dl class="ld-meta ld-brief"><div><dt>Location</dt><dd id="ldLoc">Forward operating base, high desert</dd></div><div><dt>Mode</dt><dd id="ldMode">Wave defence</dd></div></dl>
+    <p class="ld-line ld-brief"><b>Objective</b><span id="ldObj">Hold the base against wave after wave of robots.</span></p>
     <div class="load-bar"><div id="loadFill"></div></div>
     <div class="ld-row"><span id="loadLabel">Loading</span><span id="loadPct">0%</span></div>
     <p class="ld-line ld-tip" id="ldTipRow"><b>Tip</b><span id="ldTip">Head and visor shots do double damage.</span></p>
@@ -589,7 +667,10 @@ body.touch .desk-only, body:not(.touch) .touch-only { display: none !important; 
   var map = 'base', q = location.hash + '&' + location.search;
   var hm = /[#&?]map=([a-z]+)/.exec(q);
   if (hm) map = hm[1]; else { try { map = localStorage.getItem('iron-perimeter-map') || 'base'; } catch (e) { /* storage blocked */ } }
-  window.__briefing(map, /[#&?](join|room)=/.test(q) ? 'online' : 'waves');
+  var joining = /[#&?](join|room)=/.test(q), mapLoad = joining || /[#&?]mapload=1/.test(q);
+  window.__briefing(map, joining ? 'online' : 'waves');
+  // (opening the game: its title; a map being loaded: the map's briefing)
+  el('loading').className = mapLoad ? 'is-brief' : 'is-title';
   var art = el('ldArt'); if (art) art.onerror = function () { art.remove(); };
   var i = Math.floor(Math.random() * TIPS.length); el('ldTip').textContent = TIPS[i];
   var t = setInterval(function () {
@@ -665,21 +746,34 @@ body.touch .desk-only, body:not(.touch) .touch-only { display: none !important; 
 </div>
 
 <section class="overlay" id="menu" hidden>
-  <div class="card"><div class="card-in">
-    <p class="eyebrow">Forward Operating Base Kestrel</p>
-    <h1>Iron <em>Perimeter</em></h1>
-    <p class="lede">The base's security robots have turned on the garrison. You're the last one inside the wire: hold out.</p>
-    <nav class="tabs" role="tablist" aria-label="Menu"><button type="button" role="tab" id="tab-play" data-tab="play" aria-controls="panel-play" aria-selected="true">Play</button><button type="button" role="tab" id="tab-online" data-tab="online" aria-controls="panel-online" aria-selected="false">Online</button><button type="button" role="tab" id="tab-shop" data-tab="shop" aria-controls="panel-shop" aria-selected="false">Shop</button><button type="button" role="tab" id="tab-settings" data-tab="settings" aria-controls="panel-settings" aria-selected="false">Settings</button><button type="button" role="tab" id="tab-guide" data-tab="guide" aria-controls="panel-guide" aria-selected="false">How to play</button><button type="button" role="tab" id="tab-record" data-tab="record" aria-controls="panel-record" aria-selected="false">Record</button><button type="button" role="tab" id="tab-credits" data-tab="credits" aria-controls="panel-credits" aria-selected="false">Credits</button></nav>
-    <div class="tab" id="panel-play" role="tabpanel" aria-labelledby="tab-play">
-    <div class="rankcard" id="rankCard">
-      <div class="rk"><span class="badge" id="rcBadge">Rct</span><b id="rcRank">Recruit</b><span id="rcXp">0 XP</span></div>
-      <div class="xpbar" aria-hidden="true"><i id="rcFill"></i></div>
+  <!-- The main menu: our soldier in smoke on the right; the side bar on the left (who you are, Deploy, the sections); a
+       section's panel slides in over the picture, and with none open your orders and the day's drop are there instead -->
+  <div class="mm-bg" aria-hidden="true"><div class="mm-smoke" id="mmSmokeA"></div><img class="mm-hero" src="art/hero.webp" alt="" decoding="async"><div class="mm-smoke b" id="mmSmokeB"></div><div class="mm-grade"></div></div>
+  <aside class="mm-side">
+    <p class="mm-title">Main menu</p>
+    <div class="mm-player">
+      <span class="badge" id="rcBadge">Rct</span>
+      <div class="mm-who"><b id="mmName">Recruit</b><span class="mm-rank"><span id="rcRank">Recruit</span><span id="rcXp">0 XP</span></span>
+        <div class="xpbar" aria-hidden="true"><i id="rcFill"></i></div>
+        <span class="mm-cr"><i class="coin" aria-hidden="true"></i><span id="rcCr">0</span></span></div>
+    </div>
+    <div class="mm-acts"><button class="mm-go" id="startBtn" type="button" disabled>Deploy</button><button class="mm-item" id="rangeBtn" type="button" disabled>Training range</button></div>
+    <nav class="tabs mm-nav" role="tablist" aria-label="Menu"><button type="button" role="tab" id="tab-play" data-tab="play" aria-controls="panel-play" aria-selected="false">Mission</button><button type="button" role="tab" id="tab-online" data-tab="online" aria-controls="panel-online" aria-selected="false">Online</button><button type="button" role="tab" id="tab-shop" data-tab="shop" aria-controls="panel-shop" aria-selected="false">Armoury</button><button type="button" role="tab" id="tab-settings" data-tab="settings" aria-controls="panel-settings" aria-selected="false">Settings</button><button type="button" role="tab" id="tab-guide" data-tab="guide" aria-controls="panel-guide" aria-selected="false">How to play</button><button type="button" role="tab" id="tab-record" data-tab="record" aria-controls="panel-record" aria-selected="false">Record</button><button type="button" role="tab" id="tab-credits" data-tab="credits" aria-controls="panel-credits" aria-selected="false">Credits</button></nav>
+    <p class="note mm-best" id="bestMenu"></p>
+    <div class="mm-logo" id="mmLogo">Iron <em>Perimeter</em></div>
+  </aside>
+  <div class="mm-home" id="mmHome">
+    <div class="mm-card" id="rankCard">
+      <p class="mm-h"><span class="ld-blink"></span>Orders</p>
+      <ul class="chal" id="rcChal"></ul>
       <p class="small" id="rcNext"></p>
       <p class="small" id="rcMile"></p>
-      <p class="small"><span id="rcCr"></span> · <button type="button" class="linkbtn" id="rcShop">Open the shop</button></p>
-      <ul class="chal" id="rcChal"></ul>
+      <p class="small mm-daily" id="rcDaily" hidden>Your daily supply drop is waiting · <button type="button" class="linkbtn" id="rcShop">Open the armoury</button></p>
     </div>
-    <div class="mapPick"><label class="sens" for="mapSel" title="Changing the map reloads the game">Map <select id="mapSel"><option value="base">FOB Kestrel: the open base</option><option value="killhouse">Killhouse: close quarters</option></select></label> <span class="note" id="mapNote"></span></div>
+  </div>
+  <div class="mm-panel" id="mmPanel" hidden><button type="button" class="mm-close" id="mmClose" aria-label="Close">✕</button><div class="mm-panel-in">
+    <div class="tab" id="panel-play" role="tabpanel" aria-labelledby="tab-play">
+    <div class="mapPick"><label class="sens" for="mapSel" title="Picking another map loads it, then brings you back here">Map <select id="mapSel"><option value="base">FOB Kestrel: the open base</option><option value="killhouse">Killhouse: close quarters</option></select></label> <span class="note" id="mapNote"></span></div>
     <div class="opts" id="gameOpts">
       <label class="sens" for="skill" title="How tightly the robots shoot, how quickly they react, how hard they hit and how far they hear you. Co-op plays at the host's setting">Difficulty <select id="skill"><option value="recruit">Recruit</option><option value="regular">Regular</option><option value="veteran">Veteran</option></select></label>
       <label class="sens" for="mission" title="On your own or hosting co-op: a few objectives in order through one garrison, then out on the chopper">Mission <select id="mission"><option value="">None: waves</option><option value="intel">Intel run</option><option value="blackout">Comms blackout</option><option value="decap">Decapitation</option></select></label>
@@ -754,6 +848,7 @@ body.touch .desk-only, body:not(.touch) .touch-only { display: none !important; 
       <h3 class="grp">Controls</h3>
       <label class="sens desk-only" for="sens">Mouse speed <input id="sens" type="range" min="0.3" max="2.5" step="0.1" value="1"><span id="sensVal">1.0×</span></label>
       <label class="sens desk-only" for="invertY">Invert look <input id="invertY" type="checkbox" style="width:auto"></label>
+      <label class="sens desk-only" for="aimToggle" title="Off: hold the right mouse button to aim down the sights. On: click it to aim, click again to stop">Aim with a click (toggle) <input id="aimToggle" type="checkbox" style="width:auto"></label>
       <label class="sens" for="fov">Field of view <input id="fov" type="range" min="60" max="100" step="1" value="75"><span id="fovVal">75°</span></label>
       <details class="keys desk-only"><summary class="sens">Key bindings</summary><p class="small">Click an action, then press its new key (<kbd>Esc</kbd> to cancel). A key already in use swaps over. The arrow keys always move; <kbd>Esc</kbd>, <kbd>P</kbd>, <kbd>Tab</kbd> and the number keys stay as they are.</p><div id="keyList"></div><button class="btn2" id="keyReset" type="button">Reset keys</button> <span class="small" id="keyNote" role="status"></span></details>
       <h3 class="grp">Sound and screen</h3>
@@ -861,8 +956,6 @@ body.touch .desk-only, body:not(.touch) .touch-only { display: none !important; 
       <a href="https://sketchfab.com/3d-models/basement-6a93c0b301014f22bd1eec9a3521e5c2" target="_blank" rel="noopener">basement</a> by user16.1914.</p>
     <p class="small credits" id="creditsCg" hidden>Licences: CC0 (public domain), CC BY 4.0 (creativecommons.org/licenses/by/4.0) and the SIL Open Font License. Each source's address is in CREDITS.txt with the game's files.</p>
     </div>
-    <div class="actions dock"><button class="btn" id="startBtn" type="button" disabled>Deploy</button><button class="btn2" id="rangeBtn" type="button" disabled>Training range</button>
-      <span class="note" id="bestMenu"></span></div>
   </div></div>
 </section>
 
@@ -945,7 +1038,7 @@ body.touch .desk-only, body:not(.touch) .touch-only { display: none !important; 
 </section>
 
 <div id="adCover" hidden><div><b>Advertisement</b><span>The game carries on after this.</span></div></div>
-<script>window.__builtAssets = true;</script><script src="game.js?v=e19f4654d8"></script>
+<script>window.__builtAssets = true;</script><script src="game.js?v=c0413435ee"></script>
 
 </body>
 </html>
