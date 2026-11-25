@@ -964,16 +964,20 @@ body.touch .desk-only, body:not(.touch) .touch-only { display: none !important; 
     <div class="tab" id="panel-online" role="tabpanel" aria-labelledby="tab-online" hidden>
     <div class="online" id="onlinePanel">
       <div class="quick" id="quickBox" hidden>
-        <h2>Quick <em>match</em></h2>
+        <h2>Public <em>matches</em></h2>
         <p class="lede" style="font-size:14px">Play people from anywhere: you're put in a match as soon as enough players are searching.</p>
+        <h3 class="grp">PvP</h3>
         <div class="row2"><button class="btn2" id="quick1" type="button" disabled>1v1 duel</button><button class="btn2" id="quick2" type="button" disabled>2v2 team deathmatch</button></div>
+        <h3 class="grp">Co-op</h3>
+        <div class="row2"><button class="btn2" id="quick3" type="button" disabled>Co-op squad · up to 3</button></div>
+        <p class="note">You and up to two others against the robot waves. The squad deploys by itself once it's together.</p>
         <div class="party" id="partyBox">
           <div class="row2"><button class="btn2" id="partyNew" type="button">Create party</button><input class="field code" id="partyCode" maxlength="6" placeholder="PARTY CODE" autocomplete="off" spellcheck="false" aria-label="Party code"><button class="btn2" id="partyJoin" type="button">Join party</button><button class="btn2" id="partyLeave" type="button" hidden>Leave party</button></div>
           <div class="flist" id="partyList"></div>
           <p class="note" id="partyNote" role="status">2v2 with a friend: one of you makes a party and gives the other its code. The leader presses 2v2 and you're matched together, on the same team, against two others.</p>
         </div>
       </div>
-      <h2>Play with <em>friends</em></h2>
+      <h2>Private <em>matches</em></h2>
       <p class="lede" style="font-size:14px">Up to <b>ten players</b>. One of you hosts and shares the four-letter code; the others join with it. <b>Co-op</b>: all of you against the robot waves. <b>PvP</b>: everyone starts in the hub, where the host picks the mode (Gun Game, Duel rounds, Scavenger, King of the Hill, Team Deathmatch) at the match terminal.</p>
       <div class="row2"><label class="sens" for="callsign"><span id="callsignLbl">Callsign</span> <input class="field" id="callsign" maxlength="20" autocomplete="off" spellcheck="false"></label></div>
       <div class="row2"><button class="btn2" id="hostDuel" type="button" disabled>Host PvP</button><button class="btn2" id="hostCoop" type="button" disabled>Host co-op</button></div>
@@ -1244,7 +1248,7 @@ body.touch .desk-only, body:not(.touch) .touch-only { display: none !important; 
 </section>
 <div id="reveal" hidden role="dialog" aria-label="Opened"><canvas id="revealGL"></canvas><canvas id="revealFx"></canvas><div class="rv-cap" aria-live="polite"><span class="rv-tier"></span><b class="rv-name"></b><span class="rv-sub"></span></div><p class="rv-go">Click to carry on</p></div>
 <div id="adCover" hidden><div><b>Advertisement</b><span>The game carries on after this.</span></div></div>
-<script>window.__builtAssets = true;</script><script src="game.js?v=f9b4981d75"></script>
+<script>window.__builtAssets = true;</script><script src="game.js?v=5facbe2f2d"></script>
 
 </body>
 </html>
