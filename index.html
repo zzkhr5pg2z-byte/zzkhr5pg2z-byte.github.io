@@ -167,6 +167,15 @@ body.touch .bb-card span::after { content: ""; }
 #cmdClock { position: absolute; left: 50%; top: calc(64px + env(safe-area-inset-top, 0px)); transform: translateX(-50%); font: 600 13px/1 var(--mono); letter-spacing: .1em; text-transform: uppercase; color: var(--amber); background: rgba(0,0,0,.45); padding: 6px 10px; }
 body.cmdr #cross, body.cmdr #hitmark, body.cmdr .corner.br, body.cmdr #items, body.cmdr #streakBox, body.cmdr #compass, body.cmdr .corner.bl, body.cmdr #keysHint, body.cmdr #prompt, body.cmdr #dmgdir { display: none !important; }
 body.cmdr #cmdBar ~ * { cursor: default; }
+/* the ready room's control board */
+.bd-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px 22px; }
+.bd-grid b { display: block; font: 400 22px/1.1 var(--display); margin: 4px 0 2px; }
+.bd-grid .note { margin: 0; }
+@media (max-width: 640px) { .bd-grid { grid-template-columns: 1fr; } }
+.adv { border-top: 1px solid var(--line); padding-top: 6px; }
+.adv summary { cursor: pointer; font: 600 11px/1.6 var(--mono); letter-spacing: .12em; text-transform: uppercase; color: var(--muted); list-style: none; }
+.adv summary::before { content: '+ '; color: var(--amber); } .adv[open] summary::before { content: '− '; }
+.adv[open] { display: grid; gap: 6px; }
 /* medals: a word for a kill worth remarking on, under the crosshair */
 #medal { position: absolute; left: 50%; top: calc(50% + 58px); transform: translateX(-50%); display: grid; justify-items: center; gap: 2px; pointer-events: none; animation: medalIn .28s cubic-bezier(.2,1.6,.4,1); }
 #medal b { font: 400 26px/1 var(--display); letter-spacing: .04em; color: var(--amber); text-shadow: 0 2px 0 rgba(0,0,0,.6), 0 0 18px rgba(240,168,48,.35); text-transform: uppercase; }
@@ -548,6 +557,34 @@ body.intro #hud, body.intro #touch .tbtn, body.intro #stick { opacity: 0; transi
 #keyList kbd { flex: 0 0 auto; }
 .sens input { accent-color: var(--amber); width: 140px; }
 .sens select { font: inherit; color: var(--fg); background: var(--night); border: 1px solid var(--line); padding: 4px 6px; border-radius: 3px; }
+/* our own drop-downs (src/dropdown.js): the <select> stays underneath, unseen, holding the value */
+.dd { position: relative; display: inline-flex; min-width: 0; }
+.gfxNote { font: 600 11px/1.6 var(--mono); letter-spacing: .12em; text-transform: uppercase; color: var(--amber); }
+.gfxNote::before { content: ''; display: inline-block; width: 7px; height: 7px; margin-right: 8px; background: var(--amber); transform: rotate(45deg); animation: gfxPulse .8s ease-in-out infinite alternate; }
+@keyframes gfxPulse { from { opacity: .25; } to { opacity: 1; } }
+.dd > select { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; pointer-events: none; }
+.dd-btn { position: relative; display: inline-flex; align-items: center; gap: 10px; min-width: 128px; max-width: 100%; padding: 6px 30px 6px 12px; font: 600 13px/1.2 var(--body); letter-spacing: .03em; color: var(--fg); text-align: left; cursor: pointer;
+  background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,0) 60%), #161913; border: 1px solid var(--line); border-left: 3px solid var(--amber);
+  clip-path: polygon(0 0, 100% 0, 100% calc(100% - 7px), calc(100% - 7px) 100%, 0 100%); transition: border-color .15s, background .15s, box-shadow .15s; }
+.dd-btn:hover, .dd-btn:focus-visible { border-color: #6d735f; border-left-color: var(--amber); background: linear-gradient(180deg, rgba(240,168,48,.14), rgba(240,168,48,0) 70%), #1b1f17; outline: none; }
+.dd-btn:disabled { opacity: .5; cursor: default; }
+.dd-val { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.dd-chev { position: absolute; right: 11px; top: 50%; width: 7px; height: 7px; margin-top: -5px; border-right: 2px solid var(--amber); border-bottom: 2px solid var(--amber); transform: rotate(45deg); transition: transform .18s, margin .18s; }
+.dd.open .dd-chev { transform: rotate(-135deg); margin-top: -1px; }
+.dd.open .dd-btn { border-color: var(--amber); box-shadow: 0 0 0 1px rgba(240,168,48,.25), 0 0 18px rgba(240,168,48,.12); }
+.dd-list { position: fixed; z-index: 9999; overflow-y: auto; overscroll-behavior: contain; padding: 4px; font: 600 13px/1.2 var(--body); color: var(--fg);
+  background: rgba(16,18,14,.97); border: 1px solid #565c4b; border-top: 2px solid var(--amber); box-shadow: 0 14px 34px rgba(0,0,0,.6), 0 0 0 1px rgba(0,0,0,.5);
+  backdrop-filter: blur(6px); opacity: 0; transform: translateY(-6px); transition: opacity .14s, transform .14s; }
+.dd-list.up { border-top: 1px solid #565c4b; border-bottom: 2px solid var(--amber); transform: translateY(6px); }
+.dd-list.in { opacity: 1; transform: none; }
+.dd-opt { position: relative; padding: 8px 12px 8px 22px; cursor: pointer; white-space: nowrap; letter-spacing: .03em; border-left: 2px solid transparent; }
+.dd-opt.hi { background: linear-gradient(90deg, rgba(240,168,48,.2), rgba(240,168,48,.03)); border-left-color: var(--amber); }
+.dd-opt.on { color: var(--amber); }
+.dd-opt.on::before { content: ''; position: absolute; left: 8px; top: 50%; width: 6px; height: 6px; margin-top: -3px; background: var(--amber); transform: rotate(45deg); }
+.dd-opt.off { color: #6c6e60; cursor: default; }
+.dd-opt.off::after { content: ' · locked'; font: 500 10px var(--mono); letter-spacing: .1em; text-transform: uppercase; }
+body.touch .dd-btn { padding-top: 9px; padding-bottom: 9px; }
+body.touch .dd-opt { padding-top: 12px; padding-bottom: 12px; }
 .foes b { color: var(--fg); font-weight: 600; }
 .stats { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; }
 .stats div { display: grid; gap: 4px; }
@@ -622,25 +659,66 @@ body.intro #hud, body.intro #touch .tbtn, body.intro #stick { opacity: 0; transi
 .daily b { font-family: var(--mono); font-size: 13px; font-weight: 600; }
 .daily .btn { margin-left: auto; font-size: 17px; padding: 8px 18px; white-space: nowrap; }
 .daily .btn2 { margin-left: auto; }
-.shop { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 8px; }
-.skin { display: grid; gap: 5px; padding: 8px; border: 1px solid var(--line); background: rgba(0,0,0,.15); --t: #8e9086; }
+.shop { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 10px; }
+.shop.guns { grid-template-columns: repeat(auto-fill, minmax(168px, 1fr)); }
+/* a card: the item's picture on a glow in its tier's colour, the tier's stripe, a sheen across it when pointed at */
+.skin { position: relative; display: grid; gap: 4px; padding: 0 0 9px; border: 1px solid var(--line); border-top: 3px solid var(--t); overflow: hidden; --t: #8e9086;
+  background: linear-gradient(180deg, color-mix(in srgb, var(--t) 16%, #14160f) 0%, #121410 70%); transition: transform .16s, border-color .16s, box-shadow .16s; }
 .skin.rare { --t: #5b8ed6; } .skin.epic { --t: #a46ad8; } .skin.legendary { --t: #f0b02a; }
-.skin { border-top: 3px solid var(--t); }
+.skin:hover, .skin:focus-within, .skin.try { transform: translateY(-3px); border-color: color-mix(in srgb, var(--t) 70%, var(--line)); box-shadow: 0 10px 22px rgba(0,0,0,.45), 0 0 24px color-mix(in srgb, var(--t) 28%, transparent); }
+.skin::after { content: ''; position: absolute; inset: 0; pointer-events: none; background: linear-gradient(105deg, transparent 35%, rgba(255,255,255,.12) 48%, transparent 60%); transform: translateX(-120%); }
+.skin:hover::after { transform: translateX(120%); transition: transform .7s ease; }
 .skin.on { outline: 2px solid var(--amber); outline-offset: -1px; }
-.skin .sw { height: 46px; border-radius: 2px; box-shadow: inset 0 0 0 1px rgba(0,0,0,.35); }
+.skin.on::before { content: 'Equipped'; position: absolute; top: 6px; right: 6px; z-index: 1; padding: 2px 6px; font: 600 9px/1.4 var(--mono); letter-spacing: .14em; text-transform: uppercase; color: #15170f; background: var(--amber); }
+.skin .sw { position: relative; height: 54px; margin: 0 0 4px; box-shadow: inset 0 -1px 0 rgba(0,0,0,.4); }
+.skin .sw.thumb { height: 78px; background: radial-gradient(ellipse at 50% 60%, color-mix(in srgb, var(--t) 34%, transparent) 0%, transparent 70%) !important; }
+.skin .sw.thumb img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; filter: drop-shadow(0 6px 6px rgba(0,0,0,.6)); }
+.skin > b, .skin > .tier, .skin > .price { padding: 0 9px; }
+.skin > button { margin: 3px 9px 0; }
 .skin b { font-family: var(--mono); font-size: 12px; font-weight: 600; color: var(--fg); }
-.skin .tier { font-family: var(--mono); font-size: 10px; letter-spacing: .1em; text-transform: uppercase; color: var(--t); }
+.skin .tier { font-family: var(--mono); font-size: 10px; letter-spacing: .12em; text-transform: uppercase; color: var(--t); }
 .skin .price { font-family: var(--mono); font-size: 11px; color: var(--muted); }
-.skin button { padding: 5px 8px; font-size: 11px; }
-.skin.legendary .sw { animation: shine 3.5s linear infinite; background-size: 220% 100% !important; }
+.skin .price::before { content: ''; display: inline-block; width: 8px; height: 8px; margin-right: 5px; border-radius: 50%; background: radial-gradient(circle at 35% 35%, #ffe08a, #c88a12); vertical-align: -1px; }
+.skin button { padding: 6px 8px; font-size: 11px; }
+.skin.locked .sw { filter: grayscale(.85) brightness(.55); }
+.skin.locked .sw::after { content: ''; position: absolute; left: 50%; top: 50%; width: 14px; height: 11px; margin: -2px 0 0 -7px; background: #b9b7a6; border-radius: 2px;
+  box-shadow: 0 -9px 0 -3px transparent; }
+.skin.locked .sw::before { content: ''; position: absolute; left: 50%; top: 50%; width: 8px; height: 9px; margin: -11px 0 0 -6px; border: 2px solid #b9b7a6; border-bottom: 0; border-radius: 6px 6px 0 0; z-index: 1; }
+.skin.legendary:not(.locked) .sw:not(.thumb) { animation: shine 3.5s linear infinite; background-size: 220% 100% !important; }
+.skin.legendary .sw.thumb::before { content: ''; position: absolute; inset: 0; background: linear-gradient(105deg, transparent 40%, rgba(255,230,160,.22) 50%, transparent 60%); background-size: 260% 100%; animation: shine 3.2s linear infinite; }
 @keyframes shine { from { background-position: 100% 0; } to { background-position: -120% 0; } }
-@media (prefers-reduced-motion: reduce) { .skin.legendary .sw { animation: none; } }
-.locker { display: grid; grid-template-columns: 210px 1fr; gap: 12px; align-items: start; }
-.locker:has(#lockerView[hidden]) { grid-template-columns: 1fr; }
-#lockerView { width: 210px; height: 300px; border: 1px solid var(--line); background: radial-gradient(ellipse at 50% 35%, #3a3d36 0%, #1b1d19 70%); }
+@media (prefers-reduced-motion: reduce) { .skin.legendary .sw, .skin.legendary .sw.thumb::before { animation: none; } .skin:hover::after { transition: none; } }
+/* the armoury: a stage where you try things on, beside the racks */
+.armoury { display: grid; grid-template-columns: minmax(220px, 300px) minmax(0, 1fr); gap: 18px; align-items: start; }
+.armoury:has(#lockerView[hidden]) { grid-template-columns: minmax(0, 1fr); }
+.armoury:has(#lockerView[hidden]) .stage { display: none; }
+.stage { position: sticky; top: 0; display: grid; gap: 8px; }
+#lockerView { width: 100%; height: min(62vh, 470px); border: 1px solid var(--line); cursor: grab; touch-action: pan-y;
+  background: radial-gradient(ellipse at 50% 92%, rgba(240,168,48,.16) 0%, transparent 38%), radial-gradient(ellipse at 50% 30%, #34372f 0%, #161813 72%); }
+#lockerView:active { cursor: grabbing; }
+.stage-cap { display: grid; gap: 2px; padding: 8px 10px; border-left: 3px solid var(--t, var(--amber)); background: rgba(0,0,0,.25); --t: var(--amber); }
+.stage-cap.rare { --t: #5b8ed6; } .stage-cap.epic { --t: #a46ad8; } .stage-cap.legendary { --t: #f0b02a; } .stage-cap.common { --t: #b9b7a6; }
+.stage-cap .tier { font: 600 10px/1.4 var(--mono); letter-spacing: .16em; text-transform: uppercase; color: var(--t); }
+.stage-cap b { font: 400 22px/1.1 var(--display); color: var(--fg); letter-spacing: .02em; }
+.racks { display: grid; gap: 10px; min-width: 0; }
 .kitside { display: grid; gap: 10px; align-content: start; min-width: 0; }
 .kitparts { flex-wrap: wrap; }
-@media (max-width: 560px) { .locker { grid-template-columns: 1fr; } #lockerView { width: 100%; height: 260px; } }
+@media (max-width: 760px) { .armoury { grid-template-columns: 1fr; } .stage { position: static; } #lockerView { height: 300px; } }
+/* what you bought, opened like a supply drop (src/reveal.js) */
+#reveal { position: fixed; inset: 0; z-index: 70; cursor: pointer; overscroll-behavior: contain; touch-action: none; --t: #c9c6b4;
+  background: radial-gradient(ellipse at 50% 62%, #1c1e19 0%, #08090a 72%); }
+#reveal.rare { --t: #5b8ed6; } #reveal.epic { --t: #a46ad8; } #reveal.legendary { --t: #f0b02a; }
+#reveal canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+#revealFx { pointer-events: none; }
+#reveal::after { content: ''; position: absolute; inset: 0; background: #fff; opacity: 0; pointer-events: none; transition: opacity .5s ease-out; }
+#reveal.flash::after { opacity: .6; transition: none; }
+.rv-cap { position: absolute; left: 0; right: 0; bottom: 7%; display: grid; justify-items: center; gap: 6px; text-align: center; pointer-events: none; opacity: 0; transform: translateY(16px) scale(.96); transition: opacity .45s, transform .45s cubic-bezier(.2,1.4,.4,1); }
+#reveal.shown .rv-cap { opacity: 1; transform: none; }
+.rv-tier { font: 600 13px/1 var(--mono); letter-spacing: .34em; text-transform: uppercase; color: var(--t); text-shadow: 0 0 16px var(--t); }
+.rv-name { font: 400 clamp(36px, 6.4vw, 72px)/1 var(--display); color: #fff; letter-spacing: .02em; text-shadow: 0 4px 26px rgba(0,0,0,.7), 0 0 34px color-mix(in srgb, var(--t) 55%, transparent); }
+.rv-sub { font: 500 12px/1.4 var(--mono); color: var(--muted); letter-spacing: .16em; text-transform: uppercase; }
+.rv-go { position: absolute; left: 0; right: 0; bottom: 2.2%; margin: 0; text-align: center; font: 500 11px var(--mono); letter-spacing: .24em; text-transform: uppercase; color: var(--muted); opacity: 0; transition: opacity .5s; pointer-events: none; }
+#reveal.go .rv-go { opacity: .85; }
 .party { display: grid; gap: 8px; }
 #partyCode { width: 9em; text-transform: uppercase; }
 .pfriends { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin: 10px 0 2px; }
@@ -712,7 +790,7 @@ body.touch .desk-only, body:not(.touch) .touch-only { display: none !important; 
 <!-- Loading, two ways: opening the game, its title (our soldier, the name); loading a map (changing maps, or arriving by
      invite), that map's briefing (its picture, name, place, mode, objective). The bar, its megabytes and the tips in both. -->
 <div id="loading" class="is-title">
-  <div class="ld-hero" aria-hidden="true"><div class="mm-beams"><i style="--x:58%;--a0:-34deg;--a1:-6deg;--t:17s"><b></b></i><i style="--x:80%;--a0:22deg;--a1:-14deg;--t:23s;--d:-9s"><b></b></i><i style="--x:97%;--a0:-8deg;--a1:-38deg;--t:19s;--d:-5s"><b></b></i></div><div class="ld-haze"></div><img class="mm-hero" alt="" src="art/hero.webp?v=e8e221d970" decoding="async"><div class="mm-grade"></div></div>
+  <div class="ld-hero" aria-hidden="true"><div class="mm-beams"><i style="--x:58%;--a0:-34deg;--a1:-6deg;--t:17s"><b></b></i><i style="--x:80%;--a0:22deg;--a1:-14deg;--t:23s;--d:-9s"><b></b></i><i style="--x:97%;--a0:-8deg;--a1:-38deg;--t:19s;--d:-5s"><b></b></i></div><div class="ld-haze"></div><img class="mm-hero" alt="" src="art/hero.webp?v=3241db9593" decoding="async"><div class="mm-grade"></div></div>
   <img class="ld-art" id="ldArt" alt="" src="art/base.jpg?v=68930a9e1c" decoding="async">
   <div class="ld-shade"></div><div class="ld-grid" aria-hidden="true"></div><div class="ld-scan" aria-hidden="true"></div>
   <div class="load-in">
@@ -839,7 +917,7 @@ body.touch .desk-only, body:not(.touch) .touch-only { display: none !important; 
 <section class="overlay" id="menu" hidden>
   <!-- The main menu: our soldier in smoke on the right; the side bar on the left (who you are, Deploy, the sections); a
        section's panel slides in over the picture, and with none open your orders and the day's drop are there instead -->
-  <div class="mm-bg" aria-hidden="true"><div class="mm-beams"><i style="--x:58%;--a0:-34deg;--a1:-6deg;--t:17s"><b></b></i><i style="--x:80%;--a0:22deg;--a1:-14deg;--t:23s;--d:-9s"><b></b></i><i style="--x:97%;--a0:-8deg;--a1:-38deg;--t:19s;--d:-5s"><b></b></i></div><div class="mm-smoke" id="mmSmokeA"></div><img class="mm-hero" src="art/hero.webp?v=e8e221d970" alt="" decoding="async"><div class="mm-smoke b" id="mmSmokeB"></div><div class="mm-grade"></div></div>
+  <div class="mm-bg" aria-hidden="true"><div class="mm-beams"><i style="--x:58%;--a0:-34deg;--a1:-6deg;--t:17s"><b></b></i><i style="--x:80%;--a0:22deg;--a1:-14deg;--t:23s;--d:-9s"><b></b></i><i style="--x:97%;--a0:-8deg;--a1:-38deg;--t:19s;--d:-5s"><b></b></i></div><div class="mm-smoke" id="mmSmokeA"></div><img class="mm-hero" src="art/hero.webp?v=3241db9593" alt="" decoding="async"><div class="mm-smoke b" id="mmSmokeB"></div><div class="mm-grade"></div></div>
   <aside class="mm-side">
     <p class="mm-title">Main menu</p>
     <div class="mm-player">
@@ -913,33 +991,43 @@ body.touch .desk-only, body:not(.touch) .touch-only { display: none !important; 
     </div>
     </div>
     <div class="tab" id="panel-shop" role="tabpanel" aria-labelledby="tab-shop" hidden>
+    <div class="armoury">
+    <div class="stage" id="stage">
+      <canvas id="lockerView" aria-label="Your soldier, in your kit" hidden></canvas>
+      <div class="stage-cap"><span class="tier" id="stTier">Your soldier</span><b id="stName">As the others see you</b><span class="small" id="stHint">Point at anything to try it on. Drag him round.</span></div>
+    </div>
+    <div class="racks">
     <div class="wallet"><b id="crBal">0</b><span>credits</span><span class="small">Earned by playing: every game, kills and wins, challenges, and the daily drop.</span></div>
     <div class="daily" id="dailyBox"><div><b>Daily supply drop</b><span class="small" id="dailyLine"></span></div><button class="btn" id="dailyBtn" type="button">Claim</button></div>
     <div class="daily" id="adCr" hidden><div><b>Watch an ad: +150 credits</b><span class="small" id="adCrNote"></span></div><button class="btn2" id="adCrBtn" type="button"><span aria-hidden="true">&#9654;</span> Watch</button></div>
     <p class="note" id="shopNote" role="status"></p>
     <h3 class="grp">Gun skins</h3>
-    <div class="shop" id="shopGrid"></div>
+    <div class="shop guns" id="shopGrid"></div>
     <p class="small">A skin covers every gun's painted and polymer parts. Nothing in the shop changes how a gun handles.</p>
     <h3 class="grp">Your soldier</h3>
-    <div class="locker">
-      <canvas id="lockerView" aria-label="Your soldier, in your kit" hidden></canvas>
-      <div class="kitside">
-        <div class="seg kitparts" id="kitParts" role="group" aria-label="Part of your kit"></div>
-        <div class="shop" id="kitGrid"></div>
-      </div>
+    <div class="kitside">
+      <div class="seg kitparts" id="kitParts" role="group" aria-label="Part of your kit"></div>
+      <div class="shop" id="kitGrid"></div>
     </div>
     <p class="small">What the other players see you in. Your uniform's pattern comes with rank: pick it under Record.</p>
+    </div>
+    </div>
     </div>
     <div class="tab" id="panel-settings" role="tabpanel" aria-labelledby="tab-settings" hidden>
     <div id="menuOpts"><div class="opts" id="opts">
       <h3 class="grp">Graphics</h3>
-      <label class="sens" for="quality">Graphics <select id="quality"><option value="ultra">Extra high</option><option value="high">High</option><option value="medium">Medium</option><option value="low">Low</option><option value="vlow">Very low</option></select></label>
+      <label class="sens" for="quality">Graphics <select id="quality"><option value="ultra">Extra high</option><option value="high">High</option><option value="medium">Medium</option><option value="low">Low</option><option value="vlow">Very low</option></select></label><span id="gfxNote" class="gfxNote" role="status" hidden>Applying graphics…</span>
       <label class="sens" for="resSet" title="Auto lowers the resolution when the frame rate drops and raises it again when there's room">Resolution <select id="resSet"><option value="auto">Auto</option><option value="1">100%</option><option value="0.85">85%</option><option value="0.7">70%</option><option value="0.5">50%</option></select></label>
       <label class="sens" for="shadowSet">Shadows <select id="shadowSet"><option value="auto">By graphics</option><option value="high">High</option><option value="low">Low</option><option value="off">Off</option></select></label>
       <label class="sens" for="fxSet" title="Ambient occlusion, bloom and anti-aliasing">Effects <select id="fxSet"><option value="auto">By graphics</option><option value="off">Off</option></select></label>
       <label class="sens" for="fpsCap" title="Capping the frame rate keeps a laptop cooler and quieter">Frame rate <select id="fpsCap"><option value="0">Unlimited</option><option value="120">120</option><option value="60">60</option><option value="30">30</option></select></label>
       <h3 class="grp">Controls</h3>
       <label class="sens desk-only" for="sens">Mouse speed <input id="sens" type="range" min="0.3" max="2.5" step="0.1" value="1"><span id="sensVal">1.0×</span></label>
+      <details class="adv"><summary>Advanced aiming</summary>
+        <label class="sens" for="sensAds" title="How fast the view turns while you're aimed down the sights, as a share of the usual (the zoom already slows it)">Aimed-down-sights speed <input id="sensAds" type="range" min="0.3" max="2" step="0.05" value="1"><span id="sensAdsVal">1.00×</span></label>
+        <label class="sens" for="sensX" title="Left and right only">Left/right speed <input id="sensX" type="range" min="0.5" max="2" step="0.05" value="1"><span id="sensXVal">1.00×</span></label>
+        <label class="sens" for="sensY" title="Up and down only">Up/down speed <input id="sensY" type="range" min="0.5" max="2" step="0.05" value="1"><span id="sensYVal">1.00×</span></label>
+      </details>
       <label class="sens desk-only" for="invertY">Invert look <input id="invertY" type="checkbox" style="width:auto"></label>
       <label class="sens desk-only" for="aimToggle" title="Off: hold the right mouse button to aim down the sights. On: click it to aim, click again to stop">Aim with a click (toggle) <input id="aimToggle" type="checkbox" style="width:auto"></label>
       <label class="sens" for="fov">Field of view <input id="fov" type="range" min="60" max="100" step="1" value="75"><span id="fovVal">75°</span></label>
@@ -947,6 +1035,7 @@ body.touch .desk-only, body:not(.touch) .touch-only { display: none !important; 
       <h3 class="grp">Sound and screen</h3>
       <label class="sens" for="vol">Volume <input id="vol" type="range" min="0" max="1" step="0.05" value="1"><span id="volVal">100%</span></label>
       <label class="sens" for="muteSet">Mute all sound (M) <input id="muteSet" type="checkbox" style="width:auto"></label>
+          <label class="sens" for="musicSet">Menu music <input id="musicSet" type="checkbox" style="width:auto"></label>
       <label class="sens" for="crossCol">Crosshair <select id="crossCol"><option value="">White</option><option value="#3dff6e">Green</option><option value="#ffe14a">Yellow</option><option value="#3de8ff">Cyan</option><option value="#ff5ad9">Pink</option></select></label>
       <label class="sens" for="calm">Less camera shake <input id="calm" type="checkbox" style="width:auto"></label>
     </div></div>
@@ -1132,8 +1221,23 @@ body.touch .desk-only, body:not(.touch) .touch-only { display: none !important; 
   </div></div>
 </section>
 
+<section class="overlay" id="ctrlBoard" hidden>
+  <div class="card"><div class="card-in">
+    <p class="eyebrow" id="bdRoom">Ops room</p>
+    <h2>Control <em>board</em></h2>
+    <div class="bd-grid">
+      <div><span class="label">Operation</span><b id="bdOp"></b><p class="note" id="bdObj"></p></div>
+      <div><span class="label">Conditions</span><b id="bdTime"></b><p class="note" id="bdIntel"></p></div>
+      <div><span class="label">Your kit</span><p class="note" id="bdKit"></p></div>
+      <div><span class="label">Your FOB</span><p class="note" id="bdFob"></p></div>
+    </div>
+    <p class="note" id="bdWait" hidden>The host deploys the team when they're ready.</p>
+    <div class="actions"><button class="btn" id="bdDeploy" type="button">Deploy</button><button class="btn2" id="bdClose" type="button">Close</button></div>
+  </div></div>
+</section>
+<div id="reveal" hidden role="dialog" aria-label="Opened"><canvas id="revealGL"></canvas><canvas id="revealFx"></canvas><div class="rv-cap" aria-live="polite"><span class="rv-tier"></span><b class="rv-name"></b><span class="rv-sub"></span></div><p class="rv-go">Click to carry on</p></div>
 <div id="adCover" hidden><div><b>Advertisement</b><span>The game carries on after this.</span></div></div>
-<script>window.__builtAssets = true;</script><script src="game.js?v=e12a62fb43"></script>
+<script>window.__builtAssets = true;</script><script src="game.js?v=bdf21aafd3"></script>
 
 </body>
 </html>
