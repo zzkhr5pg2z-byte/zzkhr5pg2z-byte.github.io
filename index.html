@@ -308,6 +308,7 @@ body.touch #items { bottom: auto; top: calc(78px + env(safe-area-inset-top, 0px)
 #tUse { right: calc(36px + env(safe-area-inset-right, 0px)); bottom: calc(214px + env(safe-area-inset-bottom, 0px)); border-color: var(--amber); }
 #tStrike { right: calc(112px + env(safe-area-inset-right, 0px)); bottom: calc(196px + env(safe-area-inset-bottom, 0px)); border-color: var(--danger); color: #ffb3a8; }
 #tHeal { right: calc(262px + env(safe-area-inset-right, 0px)); bottom: calc(18px + env(safe-area-inset-bottom, 0px)); }
+#tTact { right: calc(306px + env(safe-area-inset-right, 0px)); bottom: calc(90px + env(safe-area-inset-bottom, 0px)); }
 #tLeanL, #tLeanR { width: 48px; height: 48px; font-size: 9px; bottom: calc(176px + env(safe-area-inset-bottom, 0px)); }
 #tLeanL { right: calc(250px + env(safe-area-inset-right, 0px)); }
 #tLeanR { right: calc(194px + env(safe-area-inset-right, 0px)); }
@@ -349,6 +350,11 @@ body.touch .corner .small.obj { max-width: none; }
 }
 @media (orientation: portrait) and (max-width: 360px) {
   body.touch .br { transform: scale(.72); }
+  /* (a small phone upright: the tactical's button doesn't fit left of NADE - it goes over it, at the edge, a size
+     down, with the lean pair and health moved up a little to make the room) */
+  #tTact { right: auto; left: calc(4px + env(safe-area-inset-left, 0px)); bottom: calc(146px + env(safe-area-inset-bottom, 0px)); width: 48px; height: 48px; font-size: 9px; }
+  #tLeanL, #tLeanR { bottom: calc(198px + env(safe-area-inset-bottom, 0px)); }
+  body.touch .bl { bottom: calc(256px + env(safe-area-inset-bottom, 0px)); }
 }
 
 /* menus */
@@ -836,6 +842,10 @@ details.party[open] summary { margin-bottom: 10px; }
 .two-tone { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 14px; margin-top: 12px; padding: 12px 14px; border: 1px solid var(--line); border-radius: 10px; background: rgba(18,20,17,.45); }
 .two-tone b { font-family: var(--display); font-weight: 400; font-size: 18px; }
 .two-tone p { flex: 1 1 220px; margin: 0; color: var(--muted); font-size: 13px; }
+
+/* the tactical grenade picker (control board, pause menu) and its line on the death card */
+.tact-row { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 14px; }
+#deathCard .dc-tact { margin-top: 4px; font: 600 10px/1.2 var(--mono); letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
 </style>
 
 <canvas id="view" aria-label="3D view of the base"></canvas>
@@ -920,7 +930,7 @@ details.party[open] summary { margin-bottom: 10px; }
   <div id="cmdClock" hidden></div>
   <div id="buildBar" hidden><div class="bb-top"><b>Fortify</b><em id="bbSup"></em><span id="bbWhy"></span><button type="button" id="bbClose" aria-label="Stop building">✕</button></div><div class="bb-row" id="bbRow"></div><div class="bb-help" id="bbHelp"></div></div>
   <div id="medal" hidden><b id="medalT"></b><span id="medalS"></span></div>
-  <div id="deathCard" hidden><span class="dc-k">Killed by</span><b id="dcName"></b><span id="dcGun"></span><span id="dcInfo"></span><div class="dc-bar"><i id="dcFill"></i></div><span id="dcNext"></span></div>
+  <div id="deathCard" hidden><span class="dc-k">Killed by</span><b id="dcName"></b><span id="dcGun"></span><span id="dcInfo"></span><div class="dc-bar"><i id="dcFill"></i></div><span id="dcNext"></span><span class="dc-tact" id="dcTact"></span></div>
   <div id="dmgdir"></div>
   <div id="prompt" hidden></div>
   <div id="cook" hidden><b id="cookNum">2.4</b><span>cooking</span></div>
@@ -961,6 +971,7 @@ details.party[open] summary { margin-bottom: 10px; }
   <button class="tbtn" id="tAim" type="button">Aim</button>
   <button class="tbtn" id="tNade" type="button">Nade<i class="cnt" id="tNadeN"></i></button>
   <button class="tbtn" id="tHeal" type="button">Heal<i class="cnt" id="tHealN"></i></button>
+  <button class="tbtn" id="tTact" type="button"><span id="tTactL">Smoke</span><i class="cnt" id="tTactN"></i></button>
   <button class="tbtn" id="tLeanL" type="button" aria-label="Lean left">&lsaquo; Lean</button>
   <button class="tbtn" id="tLeanR" type="button" aria-label="Lean right">Lean &rsaquo;</button>
   <button class="tbtn" id="tUse" type="button" hidden>Use</button>
@@ -1134,7 +1145,7 @@ details.party[open] summary { margin-bottom: 10px; }
       <div><dt><kbd data-k="Space">Space</kbd><kbd data-k="Space">Space</kbd></dt><dd>At a ledge: climb up onto it</dd></div>
       <div><dt><kbd>Esc</kbd><kbd data-k="KeyM">M</kbd></dt><dd>Pause, mute</dd></div>
       <div><dt><kbd data-k="ShiftLeft">Shift</kbd></dt><dd>Hold breath when scoped</dd></div>
-      <div><dt><kbd data-k="KeyG">G</kbd><kbd data-k="KeyT">T</kbd><kbd data-k="KeyV">V</kbd><kbd data-k="KeyZ">Z</kbd></dt><dd>Hold to aim frag, smoke, flash, EMP. A held frag cooks</dd></div>
+      <div><dt><kbd data-k="KeyG">G</kbd><kbd data-k="KeyT">T</kbd></dt><dd>Hold to aim a frag, or your tactical: smoke, flash or EMP, picked on the control board, the pause menu (P) or, when you're down, with T. A held frag cooks</dd></div>
       <div><dt><kbd data-k="KeyH">H</kbd><kbd data-k="KeyF">F</kbd><kbd data-k="KeyX">X</kbd></dt><dd>Medkit, armour plate, stim</dd></div>
       <div><dt><kbd data-k="KeyE">E</kbd><kbd data-k="KeyB">B</kbd></dt><dd>Hold to open a supply crate. Call an airstrike</dd></div>
       <div><dt><kbd>Tab</kbd></dt><dd>Hold for the scoreboard. In the PvP hub: match settings</dd></div>
@@ -1282,6 +1293,7 @@ details.party[open] summary { margin-bottom: 10px; }
     <div class="rw" id="rwBox" hidden><button class="btn2" id="rwBtn" type="button"><span aria-hidden="true">&#9654;</span> Watch an ad: +1 medkit</button><span class="note" id="rwNote"></span></div>
     <div class="pfriends" id="pauseFriends" hidden></div>
     <div id="pauseOpts"></div>
+    <div class="tact-row"><span class="label">Tactical grenade (T)</span><div class="seg tact-pick"></div></div>
     <p class="note" id="pauseNote" hidden>The match keeps going while you're paused.</p>
   </div></div>
 </section>
@@ -1314,13 +1326,14 @@ details.party[open] summary { margin-bottom: 10px; }
       <div><span class="label">Your kit</span><p class="note" id="bdKit"></p></div>
       <div><span class="label">Your FOB</span><p class="note" id="bdFob"></p></div>
     </div>
+    <div class="tact-row"><span class="label">Tactical grenade (T)</span><div class="seg tact-pick"></div></div>
     <p class="note" id="bdWait" hidden>The host deploys the team when they're ready.</p>
     <div class="actions"><button class="btn" id="bdDeploy" type="button">Deploy</button><button class="btn2" id="bdClose" type="button">Close</button></div>
   </div></div>
 </section>
 <div id="reveal" hidden role="dialog" aria-label="Opened"><canvas id="revealGL"></canvas><img class="rv-pic" alt="" hidden><canvas id="revealFx"></canvas><div class="rv-cap" aria-live="polite"><span class="rv-tier"></span><b class="rv-name"></b><span class="rv-sub"></span></div><p class="rv-go">Click to carry on</p></div>
 <div id="adCover" hidden><div><b>Advertisement</b><span>The game carries on after this.</span></div></div>
-<script>window.__builtAssets = true;</script><script src="game.js?v=d2c692327c"></script>
+<script>window.__builtAssets = true;</script><script src="game.js?v=ea0ceb6a1c"></script>
 
 </body>
 </html>
