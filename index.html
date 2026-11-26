@@ -340,6 +340,7 @@ body.touch .corner .small.obj { max-width: none; }
   body.touch .big { font-size: 24px; }
   body.touch .tl .label { font-size: 9px; }
   body.touch #minimap { width: 96px; height: 96px; }
+  body.touch #tMenu { top: calc(14px + 96px + 10px + env(safe-area-inset-top, 0px)); right: calc(16px + 29px + env(safe-area-inset-right, 0px)); }
   body.touch #compass { width: 30vw; }
   body.touch .bl { top: auto; bottom: calc(236px + env(safe-area-inset-bottom, 0px)); left: calc(14px + env(safe-area-inset-left, 0px)); transform: none; justify-items: start; text-align: left; }
   body.touch .bl .bar { width: 110px; }
@@ -401,7 +402,9 @@ kbd { font-family: var(--mono); font-size: 11px; color: var(--fg); background: v
 /* the first time: one question, and the answer starts the game */
 #gfxAsk { z-index: 12; }
 #qmBox { z-index: 11; }
-.quick { display: grid; gap: 12px; padding-bottom: 18px; border-bottom: 1px solid var(--line); }
+.quick { display: grid; gap: 12px; }
+.o-pane > .friends { border-top: 0; padding-top: 0; }
+.o-pane > .friends + .friends:not([hidden]) { border-top: 1px solid var(--line); padding-top: 16px; }
 .quick h2 { font-size: 26px; }
 .quick .row2 { display: flex; gap: 10px; flex-wrap: wrap; }
 .card.ask { max-width: 640px; }
@@ -790,6 +793,49 @@ body.touch .desk-only, body:not(.touch) .touch-only { display: none !important; 
   @keyframes bannerFade { 0% { opacity: 0; } 10%, 75% { opacity: 1; } 100% { opacity: 0; } }
   #hpFill, #loadFill { transition: none; }
 }
+
+/* the way out of a match without Esc: P, or this pill at the bottom (a phone's is by the minimap) */
+#menuBtn { position: absolute; left: 50%; bottom: calc(10px + env(safe-area-inset-bottom, 0px)); transform: translateX(-50%); pointer-events: auto; display: inline-flex; align-items: center; gap: 7px; padding: 5px 12px 5px 6px; border: 1px solid rgba(236,232,218,.22); border-radius: 999px; background: rgba(18,20,17,.55); color: var(--fg); font: 600 11px/1 var(--mono); letter-spacing: .14em; text-transform: uppercase; cursor: pointer; opacity: .7; }
+#menuBtn:hover { opacity: 1; border-color: var(--amber); }
+#menuBtn kbd { font: inherit; padding: 3px 6px; border-radius: 4px; background: rgba(236,232,218,.14); }
+body.touch #menuBtn { display: none; }
+#tMenu { position: absolute; top: calc(14px + 86px + 10px + env(safe-area-inset-top, 0px)); right: calc(16px + 24px + env(safe-area-inset-right, 0px)); width: 38px; height: 38px; min-width: 0; padding: 0; display: flex; gap: 5px; align-items: center; justify-content: center; }
+#tMenu i { display: block; width: 4px; height: 14px; border-radius: 1px; background: var(--fg); }
+
+/* the item's picture, when the crate can't be drawn in 3D: up out of where the crate is, after the lid */
+#reveal .rv-pic { position: absolute; left: 50%; top: 40%; width: min(60vw, 520px); transform: translate(-50%, -30%) scale(.6); opacity: 0; filter: drop-shadow(0 10px 30px rgba(0,0,0,.6)); pointer-events: none; }
+#reveal.shown .rv-pic { transition: transform .9s cubic-bezier(.2,.8,.2,1), opacity .4s; transform: translate(-50%, -55%) scale(1); opacity: 1; }
+
+/* the Online tab: three sections, a switch between them, big cards to press */
+.o-head { display: flex; justify-content: flex-end; }
+.o-name input { width: 12em; }
+.o-tabs { display: flex; gap: 4px; padding: 4px; border: 1px solid var(--line); border-radius: 10px; background: rgba(18,20,17,.5); }
+.o-tabs button { flex: 1; padding: 9px 10px; border: 0; border-radius: 7px; background: none; color: var(--muted); font: 600 12px/1 var(--mono); letter-spacing: .12em; text-transform: uppercase; cursor: pointer; }
+.o-tabs button.on { background: var(--amber); color: #1b1408; }
+.o-tabs button:not(.on):hover { color: var(--fg); }
+.o-tabs button[hidden] { display: none; }
+.o-pane { display: grid; gap: 12px; }
+.o-pane[hidden] { display: none; }
+.o-sub { margin: -4px 0 2px; color: var(--muted); font-size: 14px; }
+.o-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 10px; }
+.o-card { display: grid; gap: 6px; align-content: start; }
+.o-card .btn2 { width: 100%; min-height: 54px; font-size: 14px; }
+.o-card span { color: var(--muted); font-size: 12.5px; line-height: 1.35; }
+.o-card.coop .btn2 { border-color: rgba(123,211,106,.55); }
+details.party { border: 1px solid var(--line); border-radius: 8px; padding: 10px 12px; }
+details.party summary { cursor: pointer; color: var(--fg); font-weight: 600; }
+details.party[open] summary { margin-bottom: 10px; }
+.o-status { margin-top: 4px; }
+
+/* Mythic: the rarest (gun skins, glows) */
+.skin.mythic { --t: #3ee6d2; }
+.skin.mythic .sw.thumb::before, .skin.mythic .sw::after { content: ''; position: absolute; inset: 0; background: linear-gradient(105deg, transparent 38%, rgba(160,255,240,.28) 50%, transparent 62%); background-size: 260% 100%; animation: shine 2.4s linear infinite; pointer-events: none; }
+.stage-cap.mythic { --t: #3ee6d2; } #reveal.mythic { --t: #3ee6d2; }
+@media (prefers-reduced-motion: reduce) { .skin.mythic .sw::after, .skin.mythic .sw.thumb::before { animation: none; } }
+/* two-tone: a second skin on the grips, stock and handguard */
+.two-tone { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 14px; margin-top: 12px; padding: 12px 14px; border: 1px solid var(--line); border-radius: 10px; background: rgba(18,20,17,.45); }
+.two-tone b { font-family: var(--display); font-weight: 400; font-size: 18px; }
+.two-tone p { flex: 1 1 220px; margin: 0; color: var(--muted); font-size: 13px; }
 </style>
 
 <canvas id="view" aria-label="3D view of the base"></canvas>
@@ -858,6 +904,8 @@ body.touch .desk-only, body:not(.touch) .touch-only { display: none !important; 
     <div id="mateBox" hidden></div>
     <div id="streakBox"><div class="label" style="margin-top:8px">Streak</div><div class="row"><span class="big" id="streakNum">0</span><span id="streakNext"></span></div><div id="streakPips"></div></div></div>
   <div class="corner tr"><canvas id="minimap" width="170" height="170" aria-label="Minimap"></canvas></div>
+  <!-- the way out without Esc (Safari takes Esc as "leave full screen"): P, or this, opens the pause menu -->
+  <button id="menuBtn" class="desk-only" type="button"><kbd>P</kbd> Menu</button>
   <div id="feed" aria-live="polite"></div>
   <div id="compass" aria-hidden="true"><div id="compassStrip"></div><b id="compassDeg">0</b></div>
   <div id="versus" hidden><div class="vs" id="vsScore"></div><div class="sub" id="vsSub"></div></div>
@@ -893,9 +941,9 @@ body.touch .desk-only, body:not(.touch) .touch-only { display: none !important; 
     <dl class="in-meta"><div id="inTeamRow"><dt>Your team</dt><dd id="inTeam"></dd></div><div><dt>Objective</dt><dd id="inObj"></dd></div></dl></div>
   <div class="in-count" id="inCount"></div><p class="in-skip"><span class="desk-only">Any key to skip</span><span class="touch-only">Tap to skip</span></p></div>
 <!-- the tutorial (a first visit's guided start, in the training range): the step, its keys, progress; ticked off when done -->
-<div id="tut" hidden aria-live="polite"><div class="tut-top"><span id="tutStep"></span><span class="desk-only">Esc: pause or skip</span><button type="button" class="touch-only" id="tutSkip">Skip</button></div><b id="tutTitle"></b><div id="tutDo"></div><div class="tut-dots" id="tutDots"></div></div>
+<div id="tut" hidden aria-live="polite"><div class="tut-top"><span id="tutStep"></span><span class="desk-only">P: pause or skip</span><button type="button" class="touch-only" id="tutSkip">Skip</button></div><b id="tutTitle"></b><div id="tutDo"></div><div class="tut-dots" id="tutDots"></div></div>
 <div id="keysHint" hidden aria-hidden="true">
-  <div class="kh desk-only"><span><kbd data-k="KeyW">W</kbd><kbd data-k="KeyA">A</kbd><kbd data-k="KeyS">S</kbd><kbd data-k="KeyD">D</kbd> move</span><span><kbd>Mouse</kbd> aim</span><span><kbd>Left click</kbd> fire</span><span><kbd>Right click</kbd> sights</span><span><kbd data-k="ShiftLeft">Shift</kbd> sprint</span><span><kbd data-k="KeyR">R</kbd> reload</span><span><kbd data-k="KeyE">E</kbd> use</span><span><kbd>1</kbd>–<kbd>8</kbd> guns</span><span><kbd>Esc</kbd> pause</span></div>
+  <div class="kh desk-only"><span><kbd data-k="KeyW">W</kbd><kbd data-k="KeyA">A</kbd><kbd data-k="KeyS">S</kbd><kbd data-k="KeyD">D</kbd> move</span><span><kbd>Mouse</kbd> aim</span><span><kbd>Left click</kbd> fire</span><span><kbd>Right click</kbd> sights</span><span><kbd data-k="ShiftLeft">Shift</kbd> sprint</span><span><kbd data-k="KeyR">R</kbd> reload</span><span><kbd data-k="KeyE">E</kbd> use</span><span><kbd>1</kbd>–<kbd>8</kbd> guns</span><span><kbd>P</kbd> menu</span></div>
 </div>
 <div id="count" hidden></div>
 <div id="downFx" hidden></div>
@@ -919,6 +967,7 @@ body.touch .desk-only, body:not(.touch) .touch-only { display: none !important; 
   <button class="tbtn" id="tStrike" type="button" hidden>Strike</button>
   <button class="tbtn" id="tSettings" type="button" hidden>Setup</button>
   <button class="tbtn" id="tFire" type="button">Fire</button>
+  <button class="tbtn" id="tMenu" type="button" aria-label="Menu"><i></i><i></i></button>
 </div>
 
 <section class="overlay" id="menu" hidden>
@@ -963,42 +1012,60 @@ body.touch .desk-only, body:not(.touch) .touch-only { display: none !important; 
     </div>
     <div class="tab" id="panel-online" role="tabpanel" aria-labelledby="tab-online" hidden>
     <div class="online" id="onlinePanel">
-      <div class="quick" id="quickBox" hidden>
-        <h2>Public <em>matches</em></h2>
-        <p class="lede" style="font-size:14px">Play people from anywhere: you're put in a match as soon as enough players are searching.</p>
-        <h3 class="grp">PvP</h3>
-        <div class="row2"><button class="btn2" id="quick1" type="button" disabled>1v1 duel</button><button class="btn2" id="quick2" type="button" disabled>2v2 team deathmatch</button></div>
-        <h3 class="grp">Co-op</h3>
-        <div class="row2"><button class="btn2" id="quick3" type="button" disabled>Co-op squad · up to 3</button></div>
-        <p class="note">You and up to two others against the robot waves. The squad deploys by itself once it's together.</p>
-        <div class="party" id="partyBox">
-          <div class="row2"><button class="btn2" id="partyNew" type="button">Create party</button><input class="field code" id="partyCode" maxlength="6" placeholder="PARTY CODE" autocomplete="off" spellcheck="false" aria-label="Party code"><button class="btn2" id="partyJoin" type="button">Join party</button><button class="btn2" id="partyLeave" type="button" hidden>Leave party</button></div>
-          <div class="flist" id="partyList"></div>
-          <p class="note" id="partyNote" role="status">2v2 with a friend: one of you makes a party and gives the other its code. The leader presses 2v2 and you're matched together, on the same team, against two others.</p>
+      <!-- three sections, one at a time (the user: the Online tab was cluttered and confusing): Play now (public),
+           With friends (private, by code) and Friends -->
+      <div class="o-head">
+        <label class="sens o-name" for="callsign"><span id="callsignLbl">Callsign</span> <input class="field" id="callsign" maxlength="20" autocomplete="off" spellcheck="false"></label>
+      </div>
+      <div class="o-tabs" role="tablist" aria-label="Online">
+        <button type="button" role="tab" data-o="pub" id="oTabPub">Play now</button><button type="button" role="tab" data-o="priv" id="oTabPriv">With friends</button><button type="button" role="tab" data-o="fr" id="oTabFr">Friends</button>
+      </div>
+      <section class="o-pane" data-o="pub">
+        <div class="quick" id="quickBox" hidden>
+          <h2>Public <em>matches</em></h2>
+          <p class="o-sub">You're matched with whoever's searching. Nobody about? Bots step in.</p>
+          <div class="o-cards">
+            <div class="o-card"><button class="btn2" id="quick1" type="button" disabled>1v1 duel</button><span>One on one, rounds</span></div>
+            <div class="o-card"><button class="btn2" id="quick2" type="button" disabled>2v2 team deathmatch</button><span>Two teams of two</span></div>
+            <div class="o-card coop"><button class="btn2" id="quick3" type="button" disabled>Co-op squad · up to 3</button><span>A squad against the robot waves</span></div>
+          </div>
+          <details class="party" id="partyBox"><summary>Play 2v2 on a friend's team</summary>
+            <div class="row2"><button class="btn2" id="partyNew" type="button">Create party</button><input class="field code" id="partyCode" maxlength="6" placeholder="PARTY CODE" autocomplete="off" spellcheck="false" aria-label="Party code"><button class="btn2" id="partyJoin" type="button">Join party</button><button class="btn2" id="partyLeave" type="button" hidden>Leave party</button></div>
+            <div class="flist" id="partyList"></div>
+            <p class="note" id="partyNote" role="status">One of you makes a party and gives the other its code. The leader presses 2v2 and you're matched together against two others.</p>
+          </details>
         </div>
-      </div>
-      <h2>Private <em>matches</em></h2>
-      <p class="lede" style="font-size:14px">Up to <b>ten players</b>. One of you hosts and shares the four-letter code; the others join with it. <b>Co-op</b>: all of you against the robot waves. <b>PvP</b>: everyone starts in the hub, where the host picks the mode (Gun Game, Duel rounds, Scavenger, King of the Hill, Team Deathmatch) at the match terminal.</p>
-      <div class="row2"><label class="sens" for="callsign"><span id="callsignLbl">Callsign</span> <input class="field" id="callsign" maxlength="20" autocomplete="off" spellcheck="false"></label></div>
-      <div class="row2"><button class="btn2" id="hostDuel" type="button" disabled>Host PvP</button><button class="btn2" id="hostCoop" type="button" disabled>Host co-op</button></div>
-      <div class="row2"><button class="btn2" id="hostCmd" type="button" disabled title="You command the robots from above; your friends defend the base">Host Robot Commander</button></div>
-      <div id="gameList"></div>
-      <div class="row2"><input class="field code" id="joinCode" maxlength="4" placeholder="CODE" autocomplete="off" spellcheck="false" aria-label="Match code"><button class="btn2" id="joinBtn" type="button" disabled>Join</button></div>
-      <p class="note" id="netNote">Connecting…</p>
-      <div class="friends" id="friendsBox" hidden>
-        <h2>Your <em>friends</em></h2>
-        <div class="row2"><span class="sens">Your friend code</span><code class="fcode" id="fCode">…</code><button class="btn2" id="fCopy" type="button">Copy</button></div>
-        <div class="row2"><input class="field" id="fAdd" maxlength="14" placeholder="THEIR CODE" autocomplete="off" spellcheck="false" aria-label="A friend's code"><button class="btn2" id="fAddBtn" type="button">Add friend</button></div>
-        <p class="note" id="fNote" role="status">Swap codes with a friend: once you've both added each other (or one adds and the other accepts) you'll see when they're on, and can join their game.</p>
-        <div class="flist" id="fIn"></div>
-        <div class="flist" id="fList"></div>
-      </div>
-      <div class="friends" id="cgFriendsBox" hidden>
-        <h2>CrazyGames <em>friends</em></h2>
-        <p class="note" id="cgfNote"></p>
-        <button class="btn2" id="cgSignIn" type="button" hidden>Sign in to CrazyGames</button>
-        <div class="flist" id="cgfList"></div>
-      </div>
+      </section>
+      <section class="o-pane" data-o="priv" hidden>
+        <h2>Private <em>matches</em></h2>
+        <p class="o-sub">Up to ten players: one of you hosts and shares the four-letter code.</p>
+        <h3 class="grp">Host a match</h3>
+        <div class="o-cards">
+          <div class="o-card"><button class="btn2" id="hostDuel" type="button" disabled>PvP</button><span>Pick the mode in the hub: Gun Game, Duel, Team Deathmatch and more</span></div>
+          <div class="o-card coop"><button class="btn2" id="hostCoop" type="button" disabled>Co-op</button><span>Everyone against the robot waves</span></div>
+          <div class="o-card"><button class="btn2" id="hostCmd" type="button" disabled title="You command the robots from above; your friends defend the base">Robot Commander</button><span>You run the robots, they defend</span></div>
+        </div>
+        <h3 class="grp">Join a match</h3>
+        <div class="row2"><input class="field code" id="joinCode" maxlength="4" placeholder="CODE" autocomplete="off" spellcheck="false" aria-label="Match code"><button class="btn" id="joinBtn" type="button" disabled>Join</button></div>
+        <div id="gameList"></div>
+      </section>
+      <section class="o-pane" data-o="fr" hidden>
+        <div class="friends" id="friendsBox" hidden>
+          <h2>Your <em>friends</em></h2>
+          <div class="row2"><span class="sens">Your friend code</span><code class="fcode" id="fCode">…</code><button class="btn2" id="fCopy" type="button">Copy</button></div>
+          <div class="row2"><input class="field" id="fAdd" maxlength="14" placeholder="THEIR CODE" autocomplete="off" spellcheck="false" aria-label="A friend's code"><button class="btn2" id="fAddBtn" type="button">Add friend</button></div>
+          <p class="note" id="fNote" role="status">Swap codes: once you've both added each other you'll see when they're on, and can join their game.</p>
+          <div class="flist" id="fIn"></div>
+          <div class="flist" id="fList"></div>
+        </div>
+        <div class="friends" id="cgFriendsBox" hidden>
+          <h2>CrazyGames <em>friends</em></h2>
+          <p class="note" id="cgfNote"></p>
+          <button class="btn2" id="cgSignIn" type="button" hidden>Sign in to CrazyGames</button>
+          <div class="flist" id="cgfList"></div>
+        </div>
+      </section>
+      <p class="note o-status" id="netNote">Connecting…</p>
     </div>
     </div>
     <div class="tab" id="panel-shop" role="tabpanel" aria-labelledby="tab-shop" hidden>
@@ -1015,6 +1082,9 @@ body.touch .desk-only, body:not(.touch) .touch-only { display: none !important; 
     <h3 class="grp">Gun skins</h3>
     <div class="shop guns" id="shopGrid"></div>
     <p class="small">A skin covers every gun's painted and polymer parts. Nothing in the shop changes how a gun handles.</p>
+    <h3 class="grp">Gun glows</h3>
+    <div class="shop guns" id="glowGrid"></div>
+    <div class="two-tone" id="twoTone"></div>
     <h3 class="grp">Your soldier</h3>
     <div class="kitside">
       <div class="seg kitparts" id="kitParts" role="group" aria-label="Part of your kit"></div>
@@ -1029,7 +1099,7 @@ body.touch .desk-only, body:not(.touch) .touch-only { display: none !important; 
       <h3 class="grp">Graphics</h3>
       <label class="sens" for="quality">Graphics <select id="quality"><option value="ultra">Extra high</option><option value="high">High</option><option value="medium">Medium</option><option value="low">Low</option><option value="vlow">Very low</option></select></label><span id="gfxNote" class="gfxNote" role="status" hidden>Applying graphics…</span>
       <label class="sens" for="resSet" title="Auto lowers the resolution when the frame rate drops and raises it again when there's room">Resolution <select id="resSet"><option value="auto">Auto</option><option value="1">100%</option><option value="0.85">85%</option><option value="0.7">70%</option><option value="0.5">50%</option></select></label>
-      <label class="sens" for="shadowSet">Shadows <select id="shadowSet"><option value="auto">By graphics</option><option value="high">High</option><option value="low">Low</option><option value="off">Off</option></select></label>
+      <label class="sens" for="shadowSet">Shadows <select id="shadowSet"><option value="auto">By graphics</option><option value="high">High</option><option value="low">Low</option><option value="off">Players only</option></select></label>
       <label class="sens" for="fxSet" title="Ambient occlusion, bloom and anti-aliasing">Effects <select id="fxSet"><option value="auto">By graphics</option><option value="off">Off</option></select></label>
       <label class="sens" for="fpsCap" title="Capping the frame rate keeps a laptop cooler and quieter">Frame rate <select id="fpsCap"><option value="0">Unlimited</option><option value="120">120</option><option value="60">60</option><option value="30">30</option></select></label>
       <h3 class="grp">Controls</h3>
@@ -1193,6 +1263,7 @@ body.touch .desk-only, body:not(.touch) .touch-only { display: none !important; 
     <div class="set-grid">
       <div class="set-row"><span>Mode</span><div class="seg" id="setRules"><button type="button" data-v="gungame">Gun Game</button><button type="button" data-v="duel">Duel rounds</button><button type="button" data-v="scav">Scavenger</button><button type="button" data-v="hill">King of the Hill</button><button type="button" data-v="tdm">Team Deathmatch</button></div></div>
       <div class="set-row"><span id="setTargetLbl">Kills to win</span><div class="seg" id="setTarget"></div></div>
+      <div class="set-row"><span>Robots</span><div class="seg" id="setRobots"><button type="button" data-v="0">Off</button><button type="button" data-v="1">Some</button><button type="button" data-v="2">Lots</button></div></div>
       <label class="set-row" for="setNoRecoil"><span>No recoil</span><input type="checkbox" id="setNoRecoil"></label>
       <label class="set-row" for="setNoCamp"><span>No camping (move every 10 s)</span><input type="checkbox" id="setNoCamp"></label>
       <label class="set-row" for="setInfAmmo"><span>Unlimited ammo</span><input type="checkbox" id="setInfAmmo"></label>
@@ -1247,9 +1318,9 @@ body.touch .desk-only, body:not(.touch) .touch-only { display: none !important; 
     <div class="actions"><button class="btn" id="bdDeploy" type="button">Deploy</button><button class="btn2" id="bdClose" type="button">Close</button></div>
   </div></div>
 </section>
-<div id="reveal" hidden role="dialog" aria-label="Opened"><canvas id="revealGL"></canvas><canvas id="revealFx"></canvas><div class="rv-cap" aria-live="polite"><span class="rv-tier"></span><b class="rv-name"></b><span class="rv-sub"></span></div><p class="rv-go">Click to carry on</p></div>
+<div id="reveal" hidden role="dialog" aria-label="Opened"><canvas id="revealGL"></canvas><img class="rv-pic" alt="" hidden><canvas id="revealFx"></canvas><div class="rv-cap" aria-live="polite"><span class="rv-tier"></span><b class="rv-name"></b><span class="rv-sub"></span></div><p class="rv-go">Click to carry on</p></div>
 <div id="adCover" hidden><div><b>Advertisement</b><span>The game carries on after this.</span></div></div>
-<script>window.__builtAssets = true;</script><script src="game.js?v=a11c6040c1"></script>
+<script>window.__builtAssets = true;</script><script src="game.js?v=d2c692327c"></script>
 
 </body>
 </html>
